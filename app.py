@@ -39,7 +39,7 @@ def handle_message(event):
     #uID = event.source.user_id
     content = event.message.text
     
-    if content =="說明":
+    if content =="功能12":
         function(event)
         
         user_id = event.source.user_id
