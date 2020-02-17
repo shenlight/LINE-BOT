@@ -4,7 +4,7 @@ from linebot import LineBotApi, WebhookHandler
 from linebot.exceptions import InvalidSignatureError
 from linebot.models import MessageEvent, TextMessage, TextSendMessage
 
-from dbAdd import Delivery_add,User_add,UserInputCheck,UserUpdates,read,readall
+from dbAdd import Delivery_add,User_add,UserInputCheck,UserUpdates,read,readall,deleteOrder
 
 app = Flask(__name__)
 
@@ -64,6 +64,12 @@ def handle_message(event):
     elif content =="查詢全部":
         searchall(event)
 
+    elif content =="刪除訂單":
+        delete_ex(event)
+
+    elif content.find("刪除訂單編號")!=-1:
+        delete(event)
+
     else:
         pass
 
@@ -74,9 +80,12 @@ def delivery_ex(event):
 def delivery_input(event):
     result = event.message.text
     result = result.split("\n")
-    ID = Delivery_add(sp(result[0]),"",sp(result[1]),sp(result[2]),sp(result[3]),sp(result[4]),sp(result[5]),"0")
-    replytext = "已收到感謝您的使用\n您的訂單編號是:" + ID
-    line_bot_api.reply_message(event.reply_token,TextMessage(text=replytext))
+    try:
+        ID = Delivery_add(sp(result[0]),"",sp(result[1]),sp(result[2]),sp(result[3]),sp(result[4]),sp(result[5]),"0")
+        replytext = "已收到感謝您的使用\n您的訂單編號是:" + ID
+        line_bot_api.reply_message(event.reply_token,TextMessage(text=replytext))
+    except(TypeError):
+        line_bot_api.reply_message(event.reply_token,TextMessage(text="輸入錯誤"))
 
 def user_ex(event):
     #line_bot_api.push_message("Cd495babd31cff04b3743958031d8dd71",TextMessage(text="請輸入資料 以下是範例"))
@@ -87,12 +96,15 @@ def user_input(event):
     result = event.message.text
     result = result.split("\n")
     UserID = event.source.user_id
-    ID = UserInputCheck(sp(result[0]),sp(result[1]),sp(result[2]),sp(result[3]),sp(result[4]),sp(result[5]),UserID)
-    if(ID!="沒有可以媒合的對象"):
-        replytext = replytext + ID
-    else:
-        replytext = ID
-    line_bot_api.reply_message(event.reply_token,TextMessage(text=replytext))
+    try:
+        ID = UserInputCheck(sp(result[0]),sp(result[1]),sp(result[2]),sp(result[3]),sp(result[4]),sp(result[5]),UserID)
+        if(ID!="目前沒有可以媒合的對象"):
+            replytext = replytext + ID
+        else:
+            replytext = ID
+        line_bot_api.reply_message(event.reply_token,TextMessage(text=replytext))
+    except(TypeError):
+        line_bot_api.reply_message(event.reply_token,TextMessage(text="輸入錯誤"))
 
 def searchall(event):
     r = readall()
@@ -112,10 +124,20 @@ def search(event):
         for x in range(0,len(r),10):
             readresult = "OrderID:"+r[x]+"\n地區:"+r[x+1]+"\n外送者:"+r[x+2]+"\n使用者:"+r[x+3]+"\n收單時間:"+r[x+4]+"\n送達時間:"+r[x+5]+"\n上限份數:"+r[x+6]+"\n訂單明細:"+r[x+7]+"\n目前總份數:"+r[x+8]+"\n取貨地點:"+r[x+9]
             line_bot_api.push_message("U879fdf1cc34bb4c11099be8ffb9b6bb8",TextMessage(text = "查詢結果\n"+readresult))
-            
+
+def delete_ex(event):
+    line_bot_api.reply_message(event.reply_token,TextMessage(text= "請輸入要刪除的訂單編號，僅有使用者可以刪除與自已相關的訂單，以下是範例"))
+    line_bot_api.push_message("U879fdf1cc34bb4c11099be8ffb9b6bb8",TextMessage(text = "刪除訂單編號:0"))
+
+def delete(event):
+    result = event.message.text
+    ID = int(sp(result))
+    U_ID = event.source.user_id
+    d_result = deleteOrder(ID,U_ID)
+    line_bot_api.push_message("U879fdf1cc34bb4c11099be8ffb9b6bb8",TextMessage(text=d_result))
 
 def function(event):
-    line_bot_api.reply_message(event.reply_token,TextMessage(text="直接輸入想要使用的功能，系統會提供範例，請複製範例再進行修改\n目前的功能有:\n可外帶(司機)\n幫外帶(使用者)\n查詢清單"))
+    line_bot_api.reply_message(event.reply_token,TextMessage(text="直接輸入想要使用的功能，系統會提供範例，請複製範例再進行修改\n目前的功能有:\n可外帶(司機)\n幫外帶(使用者)\n查詢訂單\n查詢全部\n刪除訂單"))
 
 def sp(data):
     s = data
