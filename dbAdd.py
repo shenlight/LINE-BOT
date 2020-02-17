@@ -7,33 +7,26 @@ DB_session = sessionmaker(database)
 db_session = DB_session()
 
 #司機新增
-def Delivery_add(d_name,u_name,area,r_time,d_time,limit,place,check):  
-    db_session.add(Order( Delivery_name = d_name
-                          , User_name= u_name
-                          , Area = area
-                          , Receipt_time = r_time
-                          , Delivery_time = d_time
-                          , Limit = limit
-                          , Place = place
-                          , Check = check
-                          ))
+def Delivery_add(d_name,u_name,area,r_time,d_time,limit,place,check):
+    data = Order(Delivery_name = d_name, User_name= u_name, Area = area, Receipt_time = r_time, Delivery_time = d_time
+                , Limit = limit, Place = place, Check = check)
+    db_session.add(data)
     db_session.commit()
+    ID = str(data.OrderID)
     db_session.close()
     print("Delivery Add DONE")
+    return ID
 #delivery_add("西班牙","","高雄","1700","1930","5","133")
 
 #使用者新增
 def User_add(orderid,u_name,store,prduct,quantity,u_id):
-    db_session.add(OrderDetail( OrderID = orderid,
-                                User_name = u_name,
-                                Store_name = store,
-                                Product = prduct,
-                                Quantity = quantity,
-                                UserID = u_id
-                          ))
+    data = OrderDetail(OrderID = orderid,User_name = u_name,Store_name = store,Product = prduct,Quantity = quantity,UserID =u_id)
+    db_session.add(data)
     db_session.commit()
+    ID = str(data.OrderID)
     db_session.close()
     print("User Add DONE")
+    return ID
 #User_add("2","呆毛","鮮茶道","文山青無糖微冰","1")
 
 #使用者新增後更新Order使用者欄位
@@ -49,7 +42,7 @@ def UserInputCheck(name,area,d_time,store,product,quantity,u_id):
     check = db_session.query(Order).filter(Order.Area==area).order_by(Order.OrderID)
     now = datetime.now()+timedelta(hours=8)
     n1 = now.strftime('%H%M')
-    print(n1)
+    
     #檢查是否超過結單時間與送達時間
     for row in check:
         d_time1 = datetime.strptime(d_time,'%H%M')+timedelta(minutes=30)
@@ -67,17 +60,17 @@ def UserInputCheck(name,area,d_time,store,product,quantity,u_id):
             count += int(quantity)
             print(count)
             if(count<=Limit):
-                User_add(ID,name,store,product,quantity,u_id)
+                rU_ID = User_add(ID,name,store,product,quantity,u_id)
                 name = Name+","+name
                 UserUpdates(name,ID)
                 print("check Done")
-                break
+                return rU_ID
             else:
                 print("over count")
         else:
             print("no data1")
 #UserInputCheck("Yes234","高雄","1800","麻辣燙","米血豆干小雞",1)
-
+"""
 #使用者輸入結束後回傳編號
 def InputEndCheck(c,name):
     ID = []
@@ -90,7 +83,7 @@ def InputEndCheck(c,name):
         for row in result:
             ID.append(row.OrderID)
     return ID
-
+"""
 #查詢訂單 依訂單編號
 def read(U_ID):
     result = []
@@ -100,7 +93,7 @@ def read(U_ID):
 
     getresult = db_session.query(Order.OrderID.label("oid"),Order.Area.label("area"),Order.Delivery_name.label("d_name"),Order.User_name.label("u_name")
     ,Order.Receipt_time.label("r_time"),Order.Delivery_time.label("d_time"),Order.Limit.label("limit"),Order.Place.label("place"),OrderDetail.Store_name.label("s_name"),
-    OrderDetail.Product.label("product"),OrderDetail.Quantity.label("q")).join(OrderDetail,OrderDetail.OrderID == Order.OrderID and OrderDetail.UserID== U_ID,isouter=True).all()
+    OrderDetail.Product.label("product"),OrderDetail.Quantity.label("q")).join(OrderDetail,OrderDetail.OrderID == Order.OrderID,isouter=True).filter(OrderDetail.UserID== U_ID).all()
 
     i = iter(getresult)
     while True:

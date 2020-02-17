@@ -76,13 +76,10 @@ def delivery_ex(event):
     line_bot_api.reply_message(event.reply_token,TextMessage(text="外送者:沈育全\n外送地區:大社\n收單時間:1700\n送達時間:1900\n上限份數:10\n取貨地點:燕窩136"))
 
 def delivery_input(event):
-    replytext="已收到感謝您的使用\n您的訂單編號是:"
     result = event.message.text
     result = result.split("\n")
-    Delivery_add(sp(result[0]),"",sp(result[1]),sp(result[2]),sp(result[3]),sp(result[4]),sp(result[5]),"0")
-    ID = InputEndCheck(0,sp(result[0]))
-    for x in ID:
-        replytext = replytext + str(x)
+    ID = Delivery_add(sp(result[0]),"",sp(result[1]),sp(result[2]),sp(result[3]),sp(result[4]),sp(result[5]),"0")
+    replytext = "已收到感謝您的使用\n您的訂單編號是:" + ID
     line_bot_api.reply_message(event.reply_token,TextMessage(text=replytext))
 
 def user_ex(event):
