@@ -4,7 +4,7 @@ from linebot import LineBotApi, WebhookHandler
 from linebot.exceptions import InvalidSignatureError
 from linebot.models import MessageEvent, TextMessage, TextSendMessage
 
-from dbAdd import Delivery_add,User_add,UserInputCheck,UserUpdates,InputEndCheck,read,readall
+from dbAdd import Delivery_add,User_add,UserInputCheck,UserUpdates,read,readall
 
 app = Flask(__name__)
 
@@ -39,16 +39,12 @@ def handle_message(event):
     #uID = event.source.user_id
     content = event.message.text
     
-    if content =="功能12":
+    if content =="功能":
         function(event)
-        
-        user_id = event.source.user_id
-        print("user_id =", user_id)
         #外送群組ID
         #line_bot_api.push_message("Cd495babd31cff04b3743958031d8dd71",TextMessage(text="g"))
         #我跟bot的對話框
-        line_bot_api.push_message("U879fdf1cc34bb4c11099be8ffb9b6bb8",TextMessage(text="有人在玩我"))
-        
+        #line_bot_api.push_message("U879fdf1cc34bb4c11099be8ffb9b6bb8",TextMessage(text="有人在玩我"))
 
     elif content.find("可外帶")!=-1:
         delivery_ex(event)
@@ -91,14 +87,11 @@ def user_input(event):
     result = event.message.text
     result = result.split("\n")
     UserID = event.source.user_id
-    print(UserID)
-    UserInputCheck(sp(result[0]),sp(result[1]),sp(result[2]),sp(result[3]),sp(result[4]),sp(result[5]),UserID)
-    ID = InputEndCheck(1,sp(result[0]))
-    if(ID!=[]):
-        for x in ID:
-            replytext = replytext + str(x)
+    ID = UserInputCheck(sp(result[0]),sp(result[1]),sp(result[2]),sp(result[3]),sp(result[4]),sp(result[5]),UserID)
+    if(ID!="沒有可以媒合的對象"):
+        replytext = replytext + ID
     else:
-        replytext = "目前沒有可以與您媒合的訂單"
+        replytext = ID
     line_bot_api.reply_message(event.reply_token,TextMessage(text=replytext))
 
 def searchall(event):
@@ -110,7 +103,6 @@ def searchall(event):
             readresult = "OrderID:"+r[x]+"\n地區:"+r[x+1]+"\n外送者:"+r[x+2]+"\n使用者:"+r[x+3]+"\n收單時間:"+r[x+4]+"\n送達時間:"+r[x+5]+"\n上限份數:"+r[x+6]+"\n訂單明細:"+r[x+7]+"\n目前總份數:"+r[x+8]+"\n取貨地點:"+r[x+9]
             line_bot_api.push_message("U879fdf1cc34bb4c11099be8ffb9b6bb8",TextMessage(text = "查詢結果\n"+readresult))
 
-#TODO 有問題
 def search(event):
     U_ID = event.source.user_id
     r = read(U_ID)
