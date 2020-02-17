@@ -106,7 +106,7 @@ def searchall(event):
 def search(event):
     U_ID = event.source.user_id
     r = read(U_ID)
-    if (r ==[]):
+    if (r == "查無與您相關資料"):
         line_bot_api.push_message("U879fdf1cc34bb4c11099be8ffb9b6bb8",TextMessage(text = "查無與您相關資料"))
     else:
         for x in range(0,len(r),10):

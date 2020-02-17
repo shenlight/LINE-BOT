@@ -69,6 +69,7 @@ def UserInputCheck(name,area,d_time,store,product,quantity,u_id):
                 print("over count")
         else:
             print("no data1")
+return "目前沒有可以媒合的對象"
 #UserInputCheck("Yes234","高雄","1800","麻辣燙","米血豆干小雞",1)
 """
 #使用者輸入結束後回傳編號
@@ -98,9 +99,14 @@ def read(U_ID):
     i = iter(getresult)
     while True:
         try:
-            #gr = getresult
-            gr = next(i)
-            gr1 = next(i)
+            if(count ==0):
+                gr = next(i)
+                gr1 = next(i)
+                count += 1
+            else:
+                gr = gr1
+                gr1 = next(i)
+
             product = product + gr.s_name + "," + gr.product + "  " 
             quantity = quantity + int(gr.q) 
             
@@ -109,15 +115,20 @@ def read(U_ID):
                 result.append(gr.area)
                 result.append(gr.d_name)
                 result.append(gr.u_name)
-                result.append(gr.r_time) 
+                result.append(gr.r_time)                 
                 result.append(gr.d_time)
                 result.append(gr.limit)
                 result.append(product)
                 result.append(str(quantity))
                 result.append(gr.place)
+                print(result)
                 product = ""
                 quantity = 0
         except:
+            if(count==0):
+                break
+            product = product + gr.s_name + "," + gr.product + "  " 
+            quantity = quantity + int(gr.q) 
             result.append(str(gr.oid))
             result.append(gr.area)
             result.append(gr.d_name)
@@ -128,10 +139,10 @@ def read(U_ID):
             result.append(product)
             result.append(str(quantity))
             result.append(gr.place)
-            count = count +1
+            print(result)
             break
-    if(count!=0):
-        return result
+    if(count==0):
+        return "沒有與您相關的資料"
     else:
         return result
 
