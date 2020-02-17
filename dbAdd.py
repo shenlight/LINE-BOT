@@ -69,7 +69,7 @@ def UserInputCheck(name,area,d_time,store,product,quantity,u_id):
                 print("over count")
         else:
             print("no data1")
-return "目前沒有可以媒合的對象"
+    return "目前沒有可以媒合的對象"
 #UserInputCheck("Yes234","高雄","1800","麻辣燙","米血豆干小雞",1)
 """
 #使用者輸入結束後回傳編號
@@ -142,7 +142,7 @@ def read(U_ID):
             print(result)
             break
     if(count==0):
-        return "沒有與您相關的資料"
+        return "查無與您相關資料"
     else:
         return result
 
