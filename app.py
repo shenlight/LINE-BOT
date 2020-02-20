@@ -3,7 +3,7 @@ from flask import Flask, request, abort
 from linebot.exceptions import InvalidSignatureError
 from linebot import LineBotApi,WebhookHandler
 from linebot.models import MessageEvent, TextMessage, TextSendMessage
-from linebot.models import TemplateSendMessage,ButtonsTemplate,PostbackAction,PostbackEvent
+from linebot.models import TemplateSendMessage,ButtonsTemplate,PostbackAction,PostbackEvent,CarouselTemplate,CarouselColumn
 
 from dbAdd import Delivery_add,User_add,UserInputCheck,UserUpdates,read,readall,deleteOrder,sp
 
@@ -40,28 +40,16 @@ def handle_message(event):
     content = event.message.text
     
     if content =="功能":
-        function(event)
+        menu(event)
         
-    elif content.find("可外帶")!=-1:
-        delivery_ex(event)
-    
     elif content.find("外送者")!=-1:
         delivery_input(event)
-
-    elif content.find("幫外帶")!=-1:
-        user_ex(event)
 
     elif content.find("使用者")!=-1:
         user_input(event)
 
-    elif content == "查詢訂單":
-        search(event)
-
     elif content =="查詢全部":
         searchall(event)
-
-    elif content =="刪除訂單":
-        delete_ex(event)
 
     elif content.find("刪除訂單編號")!=-1:
         delete(event)
@@ -72,22 +60,30 @@ def handle_message(event):
 
 @handler.add(PostbackEvent)
 def handle_postback(event):
-    if event.postback.data == 'ping':
+
+    if event.postback.data == 'delivery_ex':
+        delivery_ex(event)
+
+    elif event.postback.data == 'user_ex':
+        user_ex(event)
+
+    elif event.postback.data == 'search':
+        search(event)
+
+    elif event.postback.data == 'delete_ex':
         delete_ex(event)
-     
-           
-
-
-
     
-def function(event):
-    buttons_template = ButtonsTemplate(thumbnail_image_url='https://imgur.com/92qoo50.png',title='test',text='touch',actions=[
-        PostbackAction(label='ptest',text=None,data='ping')])
+def menu(event):
+    buttons_template = ButtonsTemplate(thumbnail_image_url='https://imgur.com/92qoo50.png',title='全全外送很高興為您服務',text='請點選要使用的功能並依照指示操作\n可外送(司機)\n幫外送(使用者)\n查詢訂單(僅顯示與自己相關)',actions=[
+        PostbackAction(label='可外送',text=None,data='delivery_ex'),
+        PostbackAction(label='幫外送',text=None,data='user_ex'),
+        PostbackAction(label='查詢訂單',text=None,data='search'),
+        PostbackAction(label='刪除訂單',text=None,data='delete_ex')
+        ])
 
     template_message = TemplateSendMessage(alt_text='電腦端無法顯示',template=buttons_template)
     line_bot_api.reply_message(event.reply_token,template_message)
-      
-    #line_bot_api.reply_message(event.reply_token,TextMessage(text="直接輸入想要使用的功能，系統會提供範例，請複製範例再進行修改\n目前的功能有:\n可外帶(司機)\n幫外帶(使用者)\n查詢訂單\n查詢全部\n刪除訂單"))
+
 
 def delivery_ex(event):
     #line_bot_api.push_message("Cd495babd31cff04b3743958031d8dd71",TextMessage(text="請輸入資料 以下是範例"))
