@@ -86,13 +86,12 @@ def handle_postback(event):
 
     
 def function(event):
-    try:
-        message = TemplateSendMessage(alt_text = '按鈕樣板',template=ButtonsTemplate(thumbnail_image_url='https://imgur.com/92qoo50.png',title='test',text='touch',
-            actions=PostbackAction(label='ptest',text='datetime',data='datetime_postback'
-        )))
-        line_bot_api.reply_message(event.reply_token,message)
-    except:
-        line_bot_api.reply_message(event.reply_token,TextMessage(text="bug"))    
+    buttons_template = ButtonsTemplate(thumbnail_image_url='https://imgur.com/92qoo50.png',title='test',text='touch',actions=[
+        PostbackAction(label='ptest',text='datetime',data='datetime_postback')])
+
+    template_message = TemplateSendMessage(alt_text='Button text',template=buttons_template)
+    line_bot_api.reply_message(event.reply_token,template_message)
+      
     #line_bot_api.reply_message(event.reply_token,TextMessage(text="直接輸入想要使用的功能，系統會提供範例，請複製範例再進行修改\n目前的功能有:\n可外帶(司機)\n幫外帶(使用者)\n查詢訂單\n查詢全部\n刪除訂單"))
 
 def delivery_ex(event):
