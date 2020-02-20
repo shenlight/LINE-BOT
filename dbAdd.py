@@ -183,6 +183,8 @@ def deleteOrder(ID,U_ID):
         return "刪除完成"
     except(StopIteration):
         return "刪除失敗"
+    except(TypeError):
+        return "刪除失敗"
 
 #每隔一段時間資料庫將發現符合條件的資料輸出 並做記號
 def TimeCheck():
@@ -195,3 +197,8 @@ def TimeCheck():
         resultlist.append(r)
         db_session.query(Order).filter(Order.OrderID==row.OrderID).update({"Check":1})
     return resultlist
+
+def sp(data):
+    s = data
+    w = s.find(":")
+    return(s[w+1::])

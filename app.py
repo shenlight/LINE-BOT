@@ -1,18 +1,17 @@
 # encoding: utf-8
 from flask import Flask, request, abort
-from linebot import LineBotApi, WebhookHandler
 from linebot.exceptions import InvalidSignatureError
+from linebot import LineBotApi,WebhookHandler
 from linebot.models import MessageEvent, TextMessage, TextSendMessage
+from linebot.models import TemplateSendMessage,ButtonsTemplate,PostbackAction,PostbackEvent
 
-from dbAdd import Delivery_add,User_add,UserInputCheck,UserUpdates,read,readall,deleteOrder
+from dbAdd import Delivery_add,User_add,UserInputCheck,UserUpdates,read,readall,deleteOrder,sp
 
-app = Flask(__name__)
-
-# 填入你的 message api 資訊
 line_bot_api = LineBotApi('N97P2OvLyWzhxJHNQgLpCUymUSkNMdiSQBqKgaOXBU5AAVOMuTNbA1whs1Ocy4Ozk2hsFoUbvn+KicYgFT24DKdArnej2tne/q31PvbeahGjKcnIMuBkOECg2Df6TXMbBvupbgxTnAXqDcpyKgylSgdB04t89/1O/w1cDnyilFU=')
 handler = WebhookHandler('38d5c2f5185a44fa17ffe21e3788ccc2')
 
 
+app = Flask(__name__)
 
 # 設定你接收訊息的網址，如 https://YOURAPP.herokuapp.com/callback
 @app.route("/callback", methods=['POST'])
@@ -33,6 +32,7 @@ def callback():
     return 'OK'
 
 
+
 @handler.add(MessageEvent, message=TextMessage)
 def handle_message(event):
     #print("Handle: reply_token: " + event.reply_token + ", message: " + event.message.text)
@@ -41,11 +41,7 @@ def handle_message(event):
     
     if content =="功能":
         function(event)
-        #外送群組ID
-        #line_bot_api.push_message("Cd495babd31cff04b3743958031d8dd71",TextMessage(text="g"))
-        #我跟bot的對話框
-        #line_bot_api.push_message("U879fdf1cc34bb4c11099be8ffb9b6bb8",TextMessage(text="有人在玩我"))
-
+        
     elif content.find("可外帶")!=-1:
         delivery_ex(event)
     
@@ -69,9 +65,35 @@ def handle_message(event):
 
     elif content.find("刪除訂單編號")!=-1:
         delete(event)
-
+    
     else:
         pass
+
+
+@handler.add(PostbackEvent)
+def handle_postback(event):
+    if event.postback.data == 'ping':
+        line_bot_api.reply_message(
+            event.reply_token, TextSendMessage(text='pong'))
+    elif event.postback.data == 'datetime_postback':
+        line_bot_api.reply_message(
+            event.reply_token, TextSendMessage(text=event.postback.params['datetime']))
+    elif event.postback.data == 'date_postback':
+        line_bot_api.reply_message(
+            event.reply_token, TextSendMessage(text=event.postback.params['date']))
+
+
+
+    
+def function(event):
+    try:
+        message = TemplateSendMessage(alt_text = '按鈕樣板',template=ButtonsTemplate(thumbnail_image_url='https://imgur.com/92qoo50.png',title='test',text='touch',
+            actions=PostbackAction(label='ptest',text='datetime',data='datetime_postback'
+        )))
+        line_bot_api.reply_message(event.reply_token,message)
+    except:
+        line_bot_api.reply_message(event.reply_token,TextMessage(text="bug"))    
+    #line_bot_api.reply_message(event.reply_token,TextMessage(text="直接輸入想要使用的功能，系統會提供範例，請複製範例再進行修改\n目前的功能有:\n可外帶(司機)\n幫外帶(使用者)\n查詢訂單\n查詢全部\n刪除訂單"))
 
 def delivery_ex(event):
     #line_bot_api.push_message("Cd495babd31cff04b3743958031d8dd71",TextMessage(text="請輸入資料 以下是範例"))
@@ -131,19 +153,10 @@ def delete_ex(event):
 
 def delete(event):
     result = event.message.text
-    ID = int(sp(result))
+    ID = sp(result)
     U_ID = event.source.user_id
     d_result = deleteOrder(ID,U_ID)
     line_bot_api.push_message("U879fdf1cc34bb4c11099be8ffb9b6bb8",TextMessage(text=d_result))
-
-def function(event):
-    line_bot_api.reply_message(event.reply_token,TextMessage(text="直接輸入想要使用的功能，系統會提供範例，請複製範例再進行修改\n目前的功能有:\n可外帶(司機)\n幫外帶(使用者)\n查詢訂單\n查詢全部\n刪除訂單"))
-
-def sp(data):
-    s = data
-    w = s.find(":")
-    return(s[w+1::])
-
 import os
 if __name__ == "__main__":
     app.config['SQLALCHEMY_TRACK_MODIFICATION'] = True

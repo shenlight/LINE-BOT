@@ -23,19 +23,13 @@ line_bot_api = LineBotApi('N97P2OvLyWzhxJHNQgLpCUymUSkNMdiSQBqKgaOXBU5AAVOMuTNbA
 handler = WebhookHandler('38d5c2f5185a44fa17ffe21e3788ccc2')
 
 
+def sp(data):
+    s = data
+    w = s.find(":")
+    return(s[w+1::])
 
-
-
-
-def UserUpdates(name,id):
-    db_session.query(Order).filter(Order.OrderID==id).update({"User_name":name})
-    print("Updates DONE")
-    db_session.commit()
-    db_session.close()
-try:
-    UserUpdates("",36,123)
-except(TypeError):
-    print("輸入錯誤")
+a = sp("1234")
+print(a)
 
 
 def search():
