@@ -82,7 +82,7 @@ def read(U_ID):
 
     getresult = db_session.query(Order.OrderID.label("oid"),Order.Area.label("area"),Order.Delivery_name.label("d_name"),Order.User_name.label("u_name")
     ,Order.Receipt_time.label("r_time"),Order.Delivery_time.label("d_time"),Order.Limit.label("limit"),Order.Place.label("place"),OrderDetail.Store_name.label("s_name"),
-    OrderDetail.Product.label("product"),OrderDetail.Quantity.label("q")).join(OrderDetail,OrderDetail.OrderID == Order.OrderID,isouter=True).filter((OrderDetail.UserID== U_ID)|Order.User_ID==U_ID).order_by(Order.OrderID)
+    OrderDetail.Product.label("product"),OrderDetail.Quantity.label("q")).join(OrderDetail,OrderDetail.OrderID == Order.OrderID,isouter=True).filter((OrderDetail.UserID== U_ID)|(Order.User_ID==U_ID)).order_by(Order.OrderID)
 
     i = iter(getresult)
     while True:
@@ -189,15 +189,33 @@ def deleteOrder(ID,U_ID):
 
 #每隔一段時間資料庫將發現符合條件的資料輸出 並做記號
 def TimeCheck():
-    resultlist = []
+    result = []
+    quantity = 0
+    product = ""
     now = datetime.now()+timedelta(hours = 8)
     now = now.strftime('%H%M')
-    result = db_session.query(Order).filter(Order.User_name!="" ,now>Order.Receipt_time ,Order.Check!="1")
-    for row in result:
-        r = str(row.OrderID)
-        resultlist.append(r)
-        db_session.query(Order).filter(Order.OrderID==row.OrderID).update({"Check":1})
-    return resultlist
+    for o in db_session.query(Order).filter(Order.User_name!="" ,now>Order.Receipt_time ,Order.Check!="1").order_by(Order.OrderID):
+        result.append(str(o.OrderID))
+        result.append(o.Area)
+        result.append(o.Delivery_name)
+        result.append(o.User_name)
+        result.append(o.Receipt_time) 
+        result.append(o.Delivery_time)
+        result.append(o.Limit)
+        
+        for d in db_session.query(OrderDetail).filter(o.OrderID == OrderDetail.OrderID):
+            product = product + d.Store_name + "," + d.Product + " "
+            quantity = quantity + int(d.Quantity)
+
+        result.append(product)
+        result.append(str(quantity))
+        result.append(o.Place)
+        quantity = 0
+        product = ""
+    if(result!=[]):
+        return resultlist
+    else:
+        return "查無資料"
 
 def sp(data):
     s = data
