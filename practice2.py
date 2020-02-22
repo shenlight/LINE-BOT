@@ -1,6 +1,6 @@
 
 from dbModel import Order,OrderDetail
-from sqlalchemy import create_engine
+from sqlalchemy import create_engine,or_
 from sqlalchemy.orm import sessionmaker
 from datetime import datetime
 import re
@@ -30,6 +30,26 @@ def sp(data):
 
 a = sp("1234")
 print(a)
+
+def UserUpdates(id):
+    db_session.query(Order).filter(Order.OrderID==39).update({"User_ID":id})
+    print("Updates DONE")
+    db_session.commit()
+    db_session.close()
+#UserUpdates("123456")
+def test(uid):
+    
+    getresult = db_session.query(Order.OrderID.label("oid"),Order.User_ID.label("ou_id"),OrderDetail.UserID.label("du_id")).join(OrderDetail,OrderDetail.OrderID == Order.OrderID,isouter=True).filter((Order.User_ID == uid)|(OrderDetail.UserID==uid))
+    i = iter(getresult)
+    gr = next(i)
+    print(gr.oid)
+    print(gr.ou_id)
+    print(gr.du_id)
+    print("done")  
+
+U_ID = "123456"
+test(U_ID)
+
 
 
 def search():
@@ -92,9 +112,41 @@ def search():
             print(result)
             break
 
-def Delivery_add(d_name,u_name,area,r_time,d_time,limit,place,check):
+"""
+#查詢現在所有的訂單(可全部獲現在時間之後的)
+def readall():
+    d_ID = ""
+    product =""
+    quantity = 0
+    now = datetime.now()+timedelta(hours = 8)
+    n1 = now.strftime('%H%M')
+    result = []
+    for o in db_session.query(Order).filter(n1<Order.Receipt_time).order_by(Order.OrderID):
+        result.append(str(o.OrderID))
+        result.append(o.Area)
+        result.append(o.Delivery_name)
+        result.append(o.User_name)
+        result.append(o.Receipt_time) 
+        result.append(o.Delivery_time)
+        result.append(o.Limit)
+        
+        for d in db_session.query(OrderDetail).filter(o.OrderID == OrderDetail.OrderID):
+            product = product + d.Store_name + "," + d.Product + " "
+            quantity = quantity + int(d.Quantity)
+            d_ID = d.OrderID
+        if(o.OrderID ==d_ID):
+            result.append(product)
+            result.append(str(quantity))
+            result.append(o.Place)
+        else:
+            result.append(" ")
+            result.append(" ")
+            result.append(o.Place)
+    return result
+"""
+def Delivery_add(d_name,u_name,area,r_time,d_time,limit,place,check,u_id):
     data = Order(Delivery_name = d_name, User_name= u_name, Area = area, Receipt_time = r_time, Delivery_time = d_time
-                , Limit = limit, Place = place, Check = check)
+                , Limit = limit, Place = place, Check = check,User_ID = u_id)
     db_session.add(data)
     db_session.commit()
     print(data.OrderID)
@@ -107,13 +159,6 @@ db_session.commit()
 db_session.close()
 """
 
-"""
-#book_list = db_session.query(Book.name.label("bname"),Author.name.label ("aname")).join(Author,Book.author_id == Author.id,isouter=True).all()
-result = db_session.query(Order.OrderID.label("oid"),Order.Area.label("area"),Order.Delivery_name.label("d_name"),Order.User_name.label("u_name")
-,Order.Receipt_time.label("r_time"),Order.Delivery_time.label("d_time"),Order.Limit.label("limit"),Order.Place.label("place"),OrderDetail.Store_name.label("s_name"),
-OrderDetail.Product.label("product"),OrderDetail.Quantity.label("q")).join(OrderDetail,OrderDetail.OrderID == Order.OrderID and OrderDetail.UserID== U_ID,isouter=True).all()
-for row in result:
-    print(row)
-"""
+
 
 

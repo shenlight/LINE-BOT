@@ -24,6 +24,7 @@ class Order(db.Model):
     Limit = db.Column(db.String(64))
     Place = db.Column(db.String(256))
     Check = db.Column(db.String(32))
+    User_ID = db.Column(db.String(256))
 
     def __init__(self
                  , Delivery_name
@@ -34,6 +35,7 @@ class Order(db.Model):
                  , Limit
                  , Place
                  , Check
+                 , User_ID
                  ):
         self.Delivery_name = Delivery_name
         self.User_name = User_name
@@ -43,6 +45,7 @@ class Order(db.Model):
         self.Limit = Limit
         self.Place = Place
         self.Check = Check
+        self.User_ID = User_ID
 
 class OrderDetail(db.Model):
     __tablename__ = 'OrderDetail'

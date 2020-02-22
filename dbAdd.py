@@ -8,9 +8,9 @@ DB_session = sessionmaker(database)
 db_session = DB_session()
 
 #司機新增
-def Delivery_add(d_name,u_name,area,r_time,d_time,limit,place,check):
+def Delivery_add(d_name,u_name,area,r_time,d_time,limit,place,check,u_id):
     data = Order(Delivery_name = d_name, User_name= u_name, Area = area, Receipt_time = r_time, Delivery_time = d_time
-                , Limit = limit, Place = place, Check = check)
+                , Limit = limit, Place = place, Check = check,User_ID = u_id)
     db_session.add(data)
     db_session.commit()
     ID = str(data.OrderID)
@@ -82,7 +82,7 @@ def read(U_ID):
 
     getresult = db_session.query(Order.OrderID.label("oid"),Order.Area.label("area"),Order.Delivery_name.label("d_name"),Order.User_name.label("u_name")
     ,Order.Receipt_time.label("r_time"),Order.Delivery_time.label("d_time"),Order.Limit.label("limit"),Order.Place.label("place"),OrderDetail.Store_name.label("s_name"),
-    OrderDetail.Product.label("product"),OrderDetail.Quantity.label("q")).join(OrderDetail,OrderDetail.OrderID == Order.OrderID,isouter=True).filter(OrderDetail.UserID== U_ID).order_by(Order.OrderID)
+    OrderDetail.Product.label("product"),OrderDetail.Quantity.label("q")).join(OrderDetail,OrderDetail.OrderID == Order.OrderID,isouter=True).filter((OrderDetail.UserID== U_ID)|Order.User_ID==U_ID).order_by(Order.OrderID)
 
     i = iter(getresult)
     while True:
@@ -127,8 +127,8 @@ def read(U_ID):
             result.append(str(quantity))
             result.append(gr.place)
             return result
+#clock用單筆查詢
 
-#查詢現在所有的訂單(可全部獲現在時間之後的)
 def readall():
     d_ID = ""
     product =""
@@ -185,6 +185,7 @@ def deleteOrder(ID,U_ID):
         return "刪除失敗"
     except(TypeError):
         return "刪除失敗"
+
 
 #每隔一段時間資料庫將發現符合條件的資料輸出 並做記號
 def TimeCheck():
