@@ -213,7 +213,7 @@ def TimeCheck():
         quantity = 0
         product = ""
     if(result!=[]):
-        return resultlist
+        return result
     else:
         return "查無資料"
 
