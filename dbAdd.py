@@ -95,8 +95,9 @@ def read(U_ID):
                 gr = gr1
                 gr1 = next(i)
 
-            product = product + gr.s_name + "," + gr.product + "  " 
-            quantity = quantity + int(gr.q) 
+            if(gr.s_name is not None):
+                product = product + gr.s_name + "," + gr.product + "  " 
+                quantity = quantity + int(gr.q) 
             
             if(gr.oid!=gr1.oid):
                 result.append(str(gr.oid))
@@ -114,8 +115,9 @@ def read(U_ID):
         except(StopIteration):
             if(count==0):
                 return "查無與您相關資料"
-            product = product + gr.s_name + "," + gr.product + "  " 
-            quantity = quantity + int(gr.q) 
+            if(gr.s_name is not None):
+                product = product + gr.s_name + "," + gr.product + "  " 
+                quantity = quantity + int(gr.q) 
             result.append(str(gr.oid))
             result.append(gr.area)
             result.append(gr.d_name)

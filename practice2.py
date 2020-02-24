@@ -22,16 +22,25 @@ db_session = DB_session()
 line_bot_api = LineBotApi('N97P2OvLyWzhxJHNQgLpCUymUSkNMdiSQBqKgaOXBU5AAVOMuTNbA1whs1Ocy4Ozk2hsFoUbvn+KicYgFT24DKdArnej2tne/q31PvbeahGjKcnIMuBkOECg2Df6TXMbBvupbgxTnAXqDcpyKgylSgdB04t89/1O/w1cDnyilFU=')
 handler = WebhookHandler('38d5c2f5185a44fa17ffe21e3788ccc2')
 
+U_ID = "U879fdf1cc34bb4c11099be8ffb9b6bb8"
 
-db_session.query(OrderDetail).filter(OrderDetail.OrderID==39).delete()
-db_session.commit()
-db_session.close()
+getresult = db_session.query(Order.OrderID.label("oid"),Order.Area.label("area"),Order.Delivery_name.label("d_name"),Order.User_name.label("u_name")
+,Order.Receipt_time.label("r_time"),Order.Delivery_time.label("d_time"),Order.Limit.label("limit"),Order.Place.label("place"),OrderDetail.Store_name.label("s_name"),
+OrderDetail.Product.label("product"),OrderDetail.Quantity.label("q")).join(OrderDetail,OrderDetail.OrderID == Order.OrderID,isouter=True).filter((OrderDetail.UserID== U_ID)|(Order.User_ID==U_ID)).order_by(Order.OrderID)
+i = iter(getresult)
 
-for x in range(34,42):
-    db_session.query(Order).filter(Order.OrderID==x).delete()
-    db_session.commit()
-    db_session.close()
+while True:
+    try:
+        gr = next(i)
+        print(gr.oid)
+        print(gr.u_name)
+        print(gr.product)
+        if(gr.product is not None):
+            print("456")
+    except:
+        break
 
+i
 
 def sp(data):
     s = data
@@ -58,13 +67,13 @@ def test(uid):
 
 
 
-
 def search():
     U_ID = "U879fdf1cc34bb4c11099be8ffb9b6bb8"
 
     getresult = db_session.query(Order.OrderID.label("oid"),Order.Area.label("area"),Order.Delivery_name.label("d_name"),Order.User_name.label("u_name")
     ,Order.Receipt_time.label("r_time"),Order.Delivery_time.label("d_time"),Order.Limit.label("limit"),Order.Place.label("place"),OrderDetail.Store_name.label("s_name"),
-    OrderDetail.Product.label("product"),OrderDetail.Quantity.label("q")).join(OrderDetail,OrderDetail.OrderID == Order.OrderID,isouter=True).filter(OrderDetail.UserID== U_ID).order_by(Order.OrderID)
+    OrderDetail.Product.label("product"),OrderDetail.Quantity.label("q")).join(OrderDetail,OrderDetail.OrderID == Order.OrderID,isouter=True).filter((OrderDetail.UserID== U_ID)|(Order.User_ID==U_ID)).order_by(Order.OrderID)
+
 
     result = []
     product = ""
