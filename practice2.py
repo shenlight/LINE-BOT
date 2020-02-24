@@ -23,13 +23,22 @@ line_bot_api = LineBotApi('N97P2OvLyWzhxJHNQgLpCUymUSkNMdiSQBqKgaOXBU5AAVOMuTNbA
 handler = WebhookHandler('38d5c2f5185a44fa17ffe21e3788ccc2')
 
 
+db_session.query(OrderDetail).filter(OrderDetail.OrderID==39).delete()
+db_session.commit()
+db_session.close()
+
+for x in range(34,42):
+    db_session.query(Order).filter(Order.OrderID==x).delete()
+    db_session.commit()
+    db_session.close()
+
+
 def sp(data):
     s = data
     w = s.find(":")
     return(s[w+1::])
 
-a = sp("1234")
-print(a)
+
 
 def UserUpdates(id):
     db_session.query(Order).filter(Order.OrderID==39).update({"User_ID":id})
@@ -47,8 +56,6 @@ def test(uid):
     print(gr.du_id)
     print("done")  
 
-U_ID = "123456"
-test(U_ID)
 
 
 

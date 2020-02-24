@@ -74,7 +74,7 @@ def handle_postback(event):
         delete_ex(event)
     
 def menu(event):
-    buttons_template = ButtonsTemplate(title='全全外送很高興為您服務',text='請點選要使用的功能並依照指示操作\n可外送(司機)\n幫外送(使用者)\n查詢訂單(僅顯示與自己相關)',actions=[
+    buttons_template = ButtonsTemplate(title='全全外送很高興為您服務',text='請點選要使用的功能並依照指示操作\n可外送(司機)\n幫外送(使用者)\n查詢訂單(僅顯示與自己相關的)\n刪除訂單(僅可刪除與自己相關的)',actions=[
         PostbackAction(label='可外送',text=None,data='delivery_ex'),
         PostbackAction(label='幫外送',text=None,data='user_ex'),
         PostbackAction(label='查詢訂單',text=None,data='search'),
@@ -92,8 +92,9 @@ def delivery_ex(event):
 def delivery_input(event):
     result = event.message.text
     result = result.split("\n")
+    ID = event.source.user_id
     try:
-        ID = Delivery_add(sp(result[0]),"",sp(result[1]),sp(result[2]),sp(result[3]),sp(result[4]),sp(result[5]),"0")
+        ID = Delivery_add(sp(result[0]),"",sp(result[1]),sp(result[2]),sp(result[3]),sp(result[4]),sp(result[5]),"0",ID)
         replytext = "已收到感謝您的使用\n您的訂單編號是:" + ID
         line_bot_api.reply_message(event.reply_token,TextMessage(text=replytext))
     except(TypeError):
