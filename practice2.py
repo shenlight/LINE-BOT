@@ -2,7 +2,7 @@
 from dbModel import Order,OrderDetail
 from sqlalchemy import create_engine,or_
 from sqlalchemy.orm import sessionmaker
-from datetime import datetime
+from datetime import datetime,timedelta
 import re
 
 
@@ -22,30 +22,36 @@ db_session = DB_session()
 line_bot_api = LineBotApi('N97P2OvLyWzhxJHNQgLpCUymUSkNMdiSQBqKgaOXBU5AAVOMuTNbA1whs1Ocy4Ozk2hsFoUbvn+KicYgFT24DKdArnej2tne/q31PvbeahGjKcnIMuBkOECg2Df6TXMbBvupbgxTnAXqDcpyKgylSgdB04t89/1O/w1cDnyilFU=')
 handler = WebhookHandler('38d5c2f5185a44fa17ffe21e3788ccc2')
 
-U_ID = "U879fdf1cc34bb4c11099be8ffb9b6bb8"
+def Delivery_add(d_name,u_name,area,r_time,d_time,limit,place,check,u_id):
+    data = Order(Delivery_name = d_name, User_name= u_name, Area = area, Receipt_time = r_time, Delivery_time = d_time
+                , Limit = limit, Place = place, Check = check,User_ID = u_id)
+    db_session.add(data)
+    db_session.commit()
+    print(data.OrderID)
+    print("Delivery Add DONE")
 
-getresult = db_session.query(Order.OrderID.label("oid"),Order.Area.label("area"),Order.Delivery_name.label("d_name"),Order.User_name.label("u_name")
-,Order.Receipt_time.label("r_time"),Order.Delivery_time.label("d_time"),Order.Limit.label("limit"),Order.Place.label("place"),OrderDetail.Store_name.label("s_name"),
-OrderDetail.Product.label("product"),OrderDetail.Quantity.label("q")).join(OrderDetail,OrderDetail.OrderID == Order.OrderID,isouter=True).filter((OrderDetail.UserID== U_ID)|(Order.User_ID==U_ID)).order_by(Order.OrderID)
-i = iter(getresult)
 
-while True:
-    try:
-        gr = next(i)
-        print(gr.oid)
-        print(gr.u_name)
-        print(gr.product)
-        if(gr.product is not None):
-            print("456")
-    except:
-        break
 
-i
+
 
 def sp(data):
     s = data
     w = s.find(":")
+    if(w==-1):
+        return False
     return(s[w+1::])
+
+a = "1800"
+b = datetime.now().strftime("%H%M")
+print(b)
+
+"""
+Delivery_add(sp(text),"","大社","1900","2030","5","133","0","123456")
+db_session.commit()
+db_session.close()
+"""
+
+
 
 
 
@@ -160,21 +166,6 @@ def readall():
             result.append(o.Place)
     return result
 """
-def Delivery_add(d_name,u_name,area,r_time,d_time,limit,place,check,u_id):
-    data = Order(Delivery_name = d_name, User_name= u_name, Area = area, Receipt_time = r_time, Delivery_time = d_time
-                , Limit = limit, Place = place, Check = check,User_ID = u_id)
-    db_session.add(data)
-    db_session.commit()
-    print(data.OrderID)
-    print("Delivery Add DONE")
-"""
-Delivery_add("小雞","","大社","1900","2030","5","133","0")
-db_session.query(Order).filter(Order.OrderID==37).delete()
-print("delete done")
-db_session.commit()
-db_session.close()
-"""
-
 
 
 

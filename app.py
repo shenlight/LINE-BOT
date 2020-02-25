@@ -4,8 +4,10 @@ from linebot.exceptions import InvalidSignatureError
 from linebot import LineBotApi,WebhookHandler
 from linebot.models import MessageEvent, TextMessage, TextSendMessage
 from linebot.models import TemplateSendMessage,ButtonsTemplate,PostbackAction,PostbackEvent,CarouselTemplate,CarouselColumn
+from datetime import datetime
+import re
 
-from dbAdd import Delivery_add,User_add,UserInputCheck,UserUpdates,read,readall,deleteOrder,sp
+from dbAdd import Delivery_add,User_add,UserInputCheck,UserUpdates,read,readall,deleteOrder
 
 line_bot_api = LineBotApi('N97P2OvLyWzhxJHNQgLpCUymUSkNMdiSQBqKgaOXBU5AAVOMuTNbA1whs1Ocy4Ozk2hsFoUbvn+KicYgFT24DKdArnej2tne/q31PvbeahGjKcnIMuBkOECg2Df6TXMbBvupbgxTnAXqDcpyKgylSgdB04t89/1O/w1cDnyilFU=')
 handler = WebhookHandler('38d5c2f5185a44fa17ffe21e3788ccc2')
@@ -91,14 +93,30 @@ def delivery_ex(event):
 
 def delivery_input(event):
     result = event.message.text
-    result = result.split("\n")
-    ID = event.source.user_id
-    try:
-        ID = Delivery_add(sp(result[0]),"",sp(result[1]),sp(result[2]),sp(result[3]),sp(result[4]),sp(result[5]),"0",ID)
-        replytext = "已收到感謝您的使用\n您的訂單編號是:" + ID
-        line_bot_api.reply_message(event.reply_token,TextMessage(text=replytext))
-    except(TypeError):
-        line_bot_api.reply_message(event.reply_token,TextMessage(text="輸入錯誤"))
+    d = result.find("外送者:")
+    a = result.find("外送地區:")
+    rt = result.find("收單時間:")
+    dt = result.find("送達時間:")
+    lim = result.find("上限份數:")
+    place = result.find("取貨地點:")
+    if(d !=-1 and a !=-1 and rt!=-1 and dt!=-1 and lim!=-1 and place!=-1):
+        result = result.split("\n").s
+        if(len(result)==6):
+            ID = event.source.user_id
+            try:
+                rt = sp(result[2])
+                dt = sp(result[3])
+                lim = sp(result[4])
+                datetime.strptime(rt,"%H%M")
+                datetime.strptime(dt,"%H%M")
+                int(lim)
+                ID = Delivery_add(sp(result[0]),"",sp(result[1]),rt,dt,lim,sp(result[5]),"0",ID)
+                replytext = "已收到感謝您的使用\n您的訂單編號是:" + ID
+                line_bot_api.reply_message(event.reply_token,TextMessage(text=replytext))
+            except:
+                line_bot_api.reply_message(event.reply_token,TextMessage(text="輸入錯誤"))
+        else:
+            line_bot_api.reply_message(event.reply_token,TextMessage(text="輸入錯誤"))
 
 def user_ex(event):
     #line_bot_api.push_message("Cd495babd31cff04b3743958031d8dd71",TextMessage(text="請輸入資料 以下是範例"))
@@ -107,18 +125,32 @@ def user_ex(event):
 def user_input(event):
     replytext="已收到感謝您的使用\n您的訂單編號是:"
     result = event.message.text
-    result = result.split("\n")
-    UserID = event.source.user_id
-    try:
-        ID = UserInputCheck(sp(result[0]),sp(result[1]),sp(result[2]),sp(result[3]),sp(result[4]),sp(result[5]),UserID)
-        if(ID!="目前沒有可以媒合的對象"):
-            replytext = replytext + ID
+    u = result.find("使用者:")
+    a = result.find("外送地區:")
+    dt = result.find("送達時間:")
+    s = result.find("店家:")
+    p = result.find("點餐內容:")
+    q = result.find("總份數:")
+    if(u !=-1 and a !=-1 and dt!=-1 and s!=-1 and p!=-1 and q !=-1):
+        result = result.split("\n")
+        if(len(result)==6):
+            UserID = event.source.user_id
+            try:
+                dt = sp(result[2])
+                q = sp(result[5])
+                datetime.strptime(dt,"%H%M")
+                int(q)
+                ID = UserInputCheck(sp(result[0]),sp(result[1]),sp(result[2]),sp(result[3]),sp(result[4]),sp(result[5]),UserID)
+                if(ID!="目前沒有可以媒合的對象"):
+                    replytext = replytext + ID
+                else:
+                    replytext = ID
+                line_bot_api.reply_message(event.reply_token,TextMessage(text=replytext))
+            except:
+                line_bot_api.reply_message(event.reply_token,TextMessage(text="輸入錯誤"))
         else:
-            replytext = ID
-        line_bot_api.reply_message(event.reply_token,TextMessage(text=replytext))
-    except(TypeError):
-        line_bot_api.reply_message(event.reply_token,TextMessage(text="輸入錯誤"))
-
+            line_bot_api.reply_message(event.reply_token,TextMessage(text="輸入錯誤"))
+            
 def searchall(event):
     r = readall()
     if (r ==[]):
@@ -148,6 +180,13 @@ def delete(event):
     U_ID = event.source.user_id
     d_result = deleteOrder(ID,U_ID)
     line_bot_api.push_message("U879fdf1cc34bb4c11099be8ffb9b6bb8",TextMessage(text=d_result))
+
+
+def sp(data):
+    s = data
+    w = s.find(":")
+    return(s[w+1::])
+
 import os
 if __name__ == "__main__":
     app.config['SQLALCHEMY_TRACK_MODIFICATION'] = True
