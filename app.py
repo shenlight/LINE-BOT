@@ -88,7 +88,8 @@ def menu(event):
 
 
 def delivery_ex(event):
-    #line_bot_api.push_message("Cd495babd31cff04b3743958031d8dd71",TextMessage(text="請輸入資料 以下是範例"))
+    ID = event.source.user_id
+    line_bot_api.push_message(ID,TextMessage(text="請輸入資料 以下是範例"))
     line_bot_api.reply_message(event.reply_token,TextMessage(text="外送者:沈育全\n外送地區:大社\n收單時間:1700\n送達時間:1900\n上限份數:10\n取貨地點:燕窩136"))
 
 def delivery_input(event):
@@ -119,7 +120,8 @@ def delivery_input(event):
             line_bot_api.reply_message(event.reply_token,TextMessage(text="輸入錯誤"))
 
 def user_ex(event):
-    #line_bot_api.push_message("Cd495babd31cff04b3743958031d8dd71",TextMessage(text="請輸入資料 以下是範例"))
+    ID = event.source.user_id
+    line_bot_api.push_message(ID,TextMessage(text="請輸入資料 以下是範例"))
     line_bot_api.reply_message(event.reply_token,TextMessage(text="使用者:ZOZEJ\n外送地區:大社\n送達時間:1900\n店家:碳烤土司\n點餐內容:二號餐*1 3號餐*1\n總份數:2"))
 
 def user_input(event):
