@@ -100,7 +100,7 @@ def delivery_input(event):
     lim = result.find("上限份數:")
     place = result.find("取貨地點:")
     if(d !=-1 and a !=-1 and rt!=-1 and dt!=-1 and lim!=-1 and place!=-1):
-        result = result.split("\n").s
+        result = result.split("\n")
         if(len(result)==6):
             ID = event.source.user_id
             try:
@@ -150,7 +150,7 @@ def user_input(event):
                 line_bot_api.reply_message(event.reply_token,TextMessage(text="輸入錯誤"))
         else:
             line_bot_api.reply_message(event.reply_token,TextMessage(text="輸入錯誤"))
-            
+
 def searchall(event):
     r = readall()
     if (r ==[]):
