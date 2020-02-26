@@ -84,7 +84,7 @@ def menu(event):
         PostbackAction(label='刪除訂單',text=None,data='delete_ex')
         ])
 
-    template_message = TemplateSendMessage(alt_text='功能',template=buttons_template)
+    template_message = TemplateSendMessage(alt_text='功能面板',template=buttons_template)
     line_bot_api.reply_message(event.reply_token,template_message)
 
 

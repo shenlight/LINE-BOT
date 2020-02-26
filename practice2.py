@@ -41,9 +41,9 @@ def sp(data):
         return False
     return(s[w+1::])
 
-a = "1800"
-b = datetime.now().strftime("%H%M")
-print(b)
+db_session.query(Order).filter(Order.OrderID==43).update({"Check":"0"})
+db_session.commit()
+db_session.close()
 
 """
 Delivery_add(sp(text),"","大社","1900","2030","5","133","0","123456")
