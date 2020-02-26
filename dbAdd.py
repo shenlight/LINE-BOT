@@ -205,10 +205,13 @@ def TimeCheck():
         result.append(o.Delivery_time)
         result.append(o.Limit)
         
-        for d in db_session.query(OrderDetail).filter(o.OrderID == OrderDetail.OrderID):
+        for d in db_session.query(OrderDetail).filter(OrderDetail.OrderID == o.OrderID):
             product = product + d.Store_name + "," + d.Product + " "
             quantity = quantity + int(d.Quantity)
-
+            
+        db_session.query(Order).filter(Order.OrderID == o.OrderID).update({"Check":"1"})
+        db_session.commit()
+        db_session.close()
         result.append(product)
         result.append(str(quantity))
         result.append(o.Place)
@@ -219,7 +222,3 @@ def TimeCheck():
     else:
         return "查無資料"
 
-def sp(data):
-    s = data
-    w = s.find(":")
-    return(s[w+1::])
