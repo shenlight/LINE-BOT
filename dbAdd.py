@@ -209,15 +209,14 @@ def TimeCheck():
             product = product + d.Store_name + "," + d.Product + " "
             quantity = quantity + int(d.Quantity)
 
-        
         result.append(product)
         result.append(str(quantity))
         result.append(o.Place)
         db_session.query(Order).filter(Order.OrderID == o.OrderID).update({"Check":"1"})
         db_session.commit()
-        db_session.close()
         quantity = 0
         product = ""
+    db_session.close()
     if(result!=[]):
         return result
     else:
