@@ -80,11 +80,11 @@ def menu(event):
         PostbackAction(label='可外送',text=None,data='delivery_ex'),
         PostbackAction(label='幫外送',text=None,data='user_ex'),
         PostbackAction(label='查詢自己的訂單',text=None,data='search'),
-        PostbackAction(label='查詢目前的訂單',text=None,data='search_all'),
+        #PostbackAction(label='查詢目前的訂單',text=None,data='search_all'),
         PostbackAction(label='刪除訂單',text=None,data='delete_ex')
         ])
 
-    template_message = TemplateSendMessage(alt_text='功能面板',template=buttons_template)
+    template_message = TemplateSendMessage(alt_text='功能',template=buttons_template)
     line_bot_api.reply_message(event.reply_token,template_message)
 
 
