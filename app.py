@@ -50,9 +50,6 @@ def handle_message(event):
     elif content.find("使用者")!=-1:
         user_input(event)
 
-    elif content =="查詢全部":
-        searchall(event)
-
     elif content.find("刪除訂單編號")!=-1:
         delete(event)
     
@@ -71,6 +68,9 @@ def handle_postback(event):
 
     elif event.postback.data == 'search':
         search(event)
+    
+    elif event.postback.data == 'search_all':
+        searchall(event)
 
     elif event.postback.data == 'delete_ex':
         delete_ex(event)
@@ -79,11 +79,12 @@ def menu(event):
     buttons_template = ButtonsTemplate(title='全全外送很高興為您服務',text='請點選要使用的功能並依照指示操作',actions=[
         PostbackAction(label='可外送',text=None,data='delivery_ex'),
         PostbackAction(label='幫外送',text=None,data='user_ex'),
-        PostbackAction(label='查詢訂單',text=None,data='search'),
+        PostbackAction(label='查詢自己的訂單',text=None,data='search'),
+        PostbackAction(label='查詢目前的訂單',text=None,data='search_all'),
         PostbackAction(label='刪除訂單',text=None,data='delete_ex')
         ])
 
-    template_message = TemplateSendMessage(alt_text='電腦端無法顯示',template=buttons_template)
+    template_message = TemplateSendMessage(alt_text='功能',template=buttons_template)
     line_bot_api.reply_message(event.reply_token,template_message)
 
 
