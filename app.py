@@ -118,7 +118,8 @@ def delivery_input(event):
                 line_bot_api.reply_message(event.reply_token,TextMessage(text="輸入錯誤"))
         else:
             line_bot_api.reply_message(event.reply_token,TextMessage(text="輸入錯誤"))
-
+    else:
+        line_bot_api.reply_message(event.reply_token,TextMessage(text="輸入錯誤"))
 def user_ex(event):
     ID = event.source.user_id
     line_bot_api.push_message(ID,TextMessage(text="請輸入資料 以下是範例"))
@@ -152,6 +153,8 @@ def user_input(event):
                 line_bot_api.reply_message(event.reply_token,TextMessage(text="輸入錯誤"))
         else:
             line_bot_api.reply_message(event.reply_token,TextMessage(text="輸入錯誤"))
+    else:
+        line_bot_api.reply_message(event.reply_token,TextMessage(text="輸入錯誤"))
 
 def searchall(event):
     r = readall()
