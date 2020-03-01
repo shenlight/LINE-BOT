@@ -91,7 +91,7 @@ def menu(event):
 def delivery_ex(event):
     ID = event.source.user_id
     line_bot_api.push_message(ID,TextMessage(text="請輸入資料 以下是範例"))
-    line_bot_api.reply_message(event.reply_token,TextMessage(text="外送者:沈育全\n外送地區:大社\n收單時間:1700\n送達時間:1900\n上限份數:10\n取貨地點:燕窩136"))
+    line_bot_api.reply_message(event.reply_token,TextMessage(text="外送者:沈育全\n外送地區:大社\n收單時間:0301 1700\n送達時間:0301 1900\n上限份數:10\n取貨地點:燕窩136"))
 
 def delivery_input(event):
     result = event.message.text
@@ -109,8 +109,8 @@ def delivery_input(event):
                 rt = sp(result[2])
                 dt = sp(result[3])
                 lim = sp(result[4])
-                datetime.strptime(rt,"%H%M")
-                datetime.strptime(dt,"%H%M")
+                datetime.strptime(rt,"%m%d %H%M")
+                datetime.strptime(dt,"%m%d %H%M")
                 int(lim)
                 ID = Delivery_add(sp(result[0]),"",sp(result[1]),rt,dt,lim,sp(result[5]),"0",ID)
                 replytext = "已收到感謝您的使用\n您的訂單編號是:" + ID
@@ -124,7 +124,7 @@ def delivery_input(event):
 def user_ex(event):
     ID = event.source.user_id
     line_bot_api.push_message(ID,TextMessage(text="請輸入資料 以下是範例"))
-    line_bot_api.reply_message(event.reply_token,TextMessage(text="使用者:ZOZEJ\n外送地區:大社\n送達時間:1900\n店家:碳烤土司\n點餐內容:二號餐*1 3號餐*1\n總份數:2"))
+    line_bot_api.reply_message(event.reply_token,TextMessage(text="使用者:ZOZEJ\n外送地區:大社\n送達時間:0301 1900\n店家:碳烤土司\n點餐內容:二號餐*1 3號餐*1\n總份數:2"))
 
 def user_input(event):
     replytext="已收到感謝您的使用\n您的訂單編號是:"
@@ -142,7 +142,7 @@ def user_input(event):
             try:
                 dt = sp(result[2])
                 q = sp(result[5])
-                datetime.strptime(dt,"%H%M")
+                datetime.strptime(dt,"%m%d %H%M")
                 int(q)
                 ID = UserInputCheck(sp(result[0]),sp(result[1]),sp(result[2]),sp(result[3]),sp(result[4]),sp(result[5]),UserID)
                 if(ID!="目前沒有可以媒合的對象"):
