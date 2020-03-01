@@ -22,7 +22,10 @@ db_session = DB_session()
 line_bot_api = LineBotApi('N97P2OvLyWzhxJHNQgLpCUymUSkNMdiSQBqKgaOXBU5AAVOMuTNbA1whs1Ocy4Ozk2hsFoUbvn+KicYgFT24DKdArnej2tne/q31PvbeahGjKcnIMuBkOECg2Df6TXMbBvupbgxTnAXqDcpyKgylSgdB04t89/1O/w1cDnyilFU=')
 handler = WebhookHandler('38d5c2f5185a44fa17ffe21e3788ccc2')
 
-
+a = "0337"
+d_time = "1700"
+#d_time1 = datetime.strptime(d_time,'%m%d%H%M')
+print(a +d_time)
 
 now = datetime.now()+timedelta(hours=8)
 n1 = now.strftime('%m%d%H%M')
