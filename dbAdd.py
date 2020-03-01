@@ -42,14 +42,14 @@ def UserUpdates(name,id):
 def UserInputCheck(name,area,d_time,store,product,quantity,u_id):
     check = db_session.query(Order).filter(Order.Area==area).order_by(Order.OrderID)
     now = datetime.now()+timedelta(hours=8)
-    nd = now.strftime('%m%d%H%M')
+    nd = now.strftime('%m%d %H%M')
     d_time = nd + d_time
-    n1 = now.strftime('%m%d%H%M')
+    n1 = now.strftime('%m%d %H%M')
     
     #檢查是否超過結單時間與送達時間
     for row in check:
-        d_time1 = datetime.strptime(d_time,'%m%d%H%M')+timedelta(minutes=30)
-        d_time1 = datetime.strftime(d_time1,'%m%d%H%M')
+        d_time1 = datetime.strptime(d_time,'%m%d %H%M')+timedelta(minutes=30)
+        d_time1 = datetime.strftime(d_time1,'%m%d %H%M')
         if(n1<row.Receipt_time and d_time<=row.Delivery_time<=d_time1):
             ID = row.OrderID
             Limit = int(row.Limit)
@@ -138,7 +138,7 @@ def readall():
     product =""
     quantity = 0
     now = datetime.now()+timedelta(hours = 8)
-    n1 = now.strftime('%H%M')
+    n1 = now.strftime('%m%d %H%M')
     result = []
     for o in db_session.query(Order).filter(n1<Order.Receipt_time).order_by(Order.OrderID):
         result.append(str(o.OrderID))
@@ -197,7 +197,7 @@ def TimeCheck():
     quantity = 0
     product = ""
     now = datetime.now()+timedelta(hours = 8)
-    now = now.strftime('%m%d%H%M')
+    now = now.strftime('%m%d %H%M')
     for o in db_session.query(Order).filter(Order.User_name!="" ,now>Order.Receipt_time ,Order.Check!="1").order_by(Order.OrderID):
         result.append(str(o.OrderID))
         result.append(o.Area)
