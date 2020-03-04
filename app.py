@@ -150,10 +150,10 @@ def user_input(event):
                 else:
                     replytext = ID
                 line_bot_api.reply_message(event.reply_token,TextMessage(text=replytext))
-            except:
+            except Exception as e:
                 line_bot_api.reply_message(event.reply_token,TextMessage(text="輸入錯誤"))
                 print("1")
-                print(Exception)
+                print(e)
         else:
             line_bot_api.reply_message(event.reply_token,TextMessage(text="輸入錯誤"))
             print("2")
