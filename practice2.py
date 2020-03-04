@@ -22,11 +22,9 @@ db_session = DB_session()
 line_bot_api = LineBotApi('N97P2OvLyWzhxJHNQgLpCUymUSkNMdiSQBqKgaOXBU5AAVOMuTNbA1whs1Ocy4Ozk2hsFoUbvn+KicYgFT24DKdArnej2tne/q31PvbeahGjKcnIMuBkOECg2Df6TXMbBvupbgxTnAXqDcpyKgylSgdB04t89/1O/w1cDnyilFU=')
 handler = WebhookHandler('38d5c2f5185a44fa17ffe21e3788ccc2')
 
-for x in range(53,55):
-    db_session.query(Order).filter(Order.OrderID==x).delete()
-    db_session.commit()
-    db_session.close()
-print("done")
+dt = "0305 0030"
+d = datetime.strptime(dt,"%m%d %H%M")
+print(d)
 
 def Delivery_add(d_name,u_name,area,r_time,d_time,limit,place,check,u_id):
     data = Order(Delivery_name = d_name, User_name= u_name, Area = area, Receipt_time = r_time, Delivery_time = d_time
