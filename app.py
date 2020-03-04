@@ -153,6 +153,7 @@ def user_input(event):
             except:
                 line_bot_api.reply_message(event.reply_token,TextMessage(text="輸入錯誤"))
                 print("1")
+                print(Exception)
         else:
             line_bot_api.reply_message(event.reply_token,TextMessage(text="輸入錯誤"))
             print("2")
