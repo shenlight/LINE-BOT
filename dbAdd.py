@@ -42,10 +42,8 @@ def UserUpdates(name,id):
 def UserInputCheck(name,area,d_time,store,product,quantity,u_id):
     check = db_session.query(Order).filter(Order.Area==area).order_by(Order.OrderID)
     now = datetime.now()+timedelta(hours=8)
-    nd = now.strftime('%m%d %H%M')
-    d_time = nd + d_time
     n1 = now.strftime('%m%d %H%M')
-    
+    print(n1)
     #檢查是否超過結單時間與送達時間
     for row in check:
         d_time1 = datetime.strptime(d_time,'%m%d %H%M')+timedelta(minutes=30)

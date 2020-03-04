@@ -139,21 +139,21 @@ def user_input(event):
         result = result.split("\n")
         if(len(result)==6):
             UserID = event.source.user_id
-            
-            dt = sp(result[2])
-            q = sp(result[5])
-            datetime.strptime(dt,"%m%d %H%M")
-            int(q)
-            ID = UserInputCheck(sp(result[0]),sp(result[1]),sp(result[2]),sp(result[3]),sp(result[4]),sp(result[5]),UserID)
-            if(ID!="目前沒有可以媒合的對象"):
-                replytext = replytext + ID
-            else:
-                replytext = ID
-            line_bot_api.reply_message(event.reply_token,TextMessage(text=replytext))
-            
-            line_bot_api.reply_message(event.reply_token,TextMessage(text="輸入錯誤"))
-            print("1")
-                
+            try:
+                dt = sp(result[2])
+                q = sp(result[5])
+                datetime.strptime(dt,"%m%d %H%M")
+                int(q)
+                ID = UserInputCheck(sp(result[0]),sp(result[1]),sp(result[2]),sp(result[3]),sp(result[4]),sp(result[5]),UserID)
+                if(ID!="目前沒有可以媒合的對象"):
+                    replytext = replytext + ID
+                else:
+                    replytext = ID
+                line_bot_api.reply_message(event.reply_token,TextMessage(text=replytext))
+            except Exception as e:
+                line_bot_api.reply_message(event.reply_token,TextMessage(text="輸入錯誤"))
+                print("1")
+                print(e)
         else:
             line_bot_api.reply_message(event.reply_token,TextMessage(text="輸入錯誤"))
             print("2")
