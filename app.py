@@ -142,7 +142,7 @@ def user_input(event):
             try:
                 dt = sp(result[2])
                 q = sp(result[5])
-                datetime.strptime(dt,"%m%d %H%M")
+                #datetime.strptime(dt,"%m%d %H%M")
                 int(q)
                 ID = UserInputCheck(sp(result[0]),sp(result[1]),sp(result[2]),sp(result[3]),sp(result[4]),sp(result[5]),UserID)
                 if(ID!="目前沒有可以媒合的對象"):
