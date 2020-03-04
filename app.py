@@ -3,7 +3,7 @@ from flask import Flask, request, abort
 from linebot.exceptions import InvalidSignatureError
 from linebot import LineBotApi,WebhookHandler
 from linebot.models import MessageEvent, TextMessage, TextSendMessage
-from linebot.models import TemplateSendMessage,ButtonsTemplate,PostbackAction,PostbackEvent,CarouselTemplate,CarouselColumn
+from linebot.models import TemplateSendMessage,ButtonsTemplate,PostbackAction,PostbackEvent
 from datetime import datetime
 import re
 
@@ -152,11 +152,13 @@ def user_input(event):
                 line_bot_api.reply_message(event.reply_token,TextMessage(text=replytext))
             except:
                 line_bot_api.reply_message(event.reply_token,TextMessage(text="輸入錯誤"))
+                print("1")
         else:
             line_bot_api.reply_message(event.reply_token,TextMessage(text="輸入錯誤"))
+            print("2")
     else:
         line_bot_api.reply_message(event.reply_token,TextMessage(text="輸入錯誤"))
-
+        print("3")
 def searchall(event):
     r = readall()
     if (r ==[]):
