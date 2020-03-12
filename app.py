@@ -101,6 +101,7 @@ def delivery_input(event):
     lim = result.find("上限份數:")
     place = result.find("取貨地點:")
     now = datetime.now()+timedelta(hours = 8)
+    now = datetime.strftime(now,"%m%d %H%M")
     if(d !=-1 and a !=-1 and rt!=-1 and dt!=-1 and lim!=-1 and place!=-1):
         result = result.split("\n")
         if(len(result)==6):
@@ -109,17 +110,18 @@ def delivery_input(event):
                 rt = sp(result[2])
                 dt = sp(result[3])
                 lim = sp(result[4])
-                rt = datetime.strptime(rt,"%m%d %H%M")
+                datetime.strptime(rt,"%m%d %H%M")
                 print(rt)
-                dt = datetime.strptime(dt,"%m%d %H%M")
+                datetime.strptime(dt,"%m%d %H%M")
+                int(lim)
                 print(dt)
                 print(now)
                 if(rt<now or dt< now):
                     line_bot_api.reply_message(event.reply_token,TextMessage(text="時間輸入錯誤"))
-                int(lim)
-                ID = Delivery_add(sp(result[0]),"",sp(result[1]),rt,dt,lim,sp(result[5]),"0",ID)
-                replytext = "已收到感謝您的使用\n您的訂單編號是:" + ID
-                line_bot_api.reply_message(event.reply_token,TextMessage(text=replytext))
+                else:
+                    ID = Delivery_add(sp(result[0]),"",sp(result[1]),rt,dt,lim,sp(result[5]),"0",ID)
+                    replytext = "已收到感謝您的使用\n您的訂單編號是:" + ID
+                    line_bot_api.reply_message(event.reply_token,TextMessage(text=replytext))
             except:
                 line_bot_api.reply_message(event.reply_token,TextMessage(text="輸入錯誤"))
         else:
@@ -135,6 +137,7 @@ def user_input(event):
     replytext="已收到感謝您的使用\n您的訂單編號是:"
     result = event.message.text
     now = datetime.now()+timedelta(hours = 8)
+    now = datetime.strftime(now,"%m%d %H%M")
     u = result.find("使用者:")
     a = result.find("外送地區:")
     dt = result.find("送達時間:")
@@ -148,11 +151,12 @@ def user_input(event):
             try:
                 dt = sp(result[2])
                 q = sp(result[5])
-                dt = datetime.strptime(dt,"%m%d %H%M")
+                datetime.strptime(dt,"%m%d %H%M")
+                int(q)
                 if(dt<now):
                     line_bot_api.reply_message(event.reply_token,TextMessage(text="時間輸入錯誤"))
-                int(q)
-                ID = UserInputCheck(sp(result[0]),sp(result[1]),sp(result[2]),sp(result[3]),sp(result[4]),sp(result[5]),UserID)
+                else:
+                    ID = UserInputCheck(sp(result[0]),sp(result[1]),sp(result[2]),sp(result[3]),sp(result[4]),sp(result[5]),UserID)
                 if(ID!="目前沒有可以媒合的對象"):
                     replytext = replytext + ID
                 else:

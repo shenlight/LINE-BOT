@@ -23,12 +23,12 @@ line_bot_api = LineBotApi('N97P2OvLyWzhxJHNQgLpCUymUSkNMdiSQBqKgaOXBU5AAVOMuTNbA
 handler = WebhookHandler('38d5c2f5185a44fa17ffe21e3788ccc2')
 
 d_time = "0310 0021"
-now = datetime.now()
+now = datetime.strftime(datetime.now(),"%m%d %H%M")
+print(now)
+datetime.strptime(d_time,"%m%d %H%M")
+print(d_time)
 
-u_name = ",123,123,446"
-du_name = '123'
-u_name = re.sub(","+du_name,'',u_name)
-print(u_name)
+
 def timedelete():
     now = datetime.now()+timedelta(hours=8)
     result = db_session.query(Order).filter((Order.User_name=="") | (Order.User_name ==",")).filter(Order.Check=="0")
@@ -45,7 +45,6 @@ def timedelete():
             
         except:
             break
-timedelete()
 
 
 
