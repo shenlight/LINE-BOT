@@ -3,8 +3,7 @@ from linebot import LineBotApi, WebhookHandler
 from linebot.exceptions import InvalidSignatureError
 from linebot.models import MessageEvent, TextMessage, TextSendMessage
 from datetime import datetime,timedelta
-from dbModel import Order,OrderDetail
-from dbAdd import TimeCheck,read
+from dbAdd import TimeCheck,Timedelete
 
 line_bot_api = LineBotApi('N97P2OvLyWzhxJHNQgLpCUymUSkNMdiSQBqKgaOXBU5AAVOMuTNbA1whs1Ocy4Ozk2hsFoUbvn+KicYgFT24DKdArnej2tne/q31PvbeahGjKcnIMuBkOECg2Df6TXMbBvupbgxTnAXqDcpyKgylSgdB04t89/1O/w1cDnyilFU=')
 handler = WebhookHandler('38d5c2f5185a44fa17ffe21e3788ccc2')
@@ -13,11 +12,6 @@ handler = WebhookHandler('38d5c2f5185a44fa17ffe21e3788ccc2')
 sched = BlockingScheduler()
 @sched.scheduled_job('interval',minutes=1)
 def time_job():
-    now = datetime.now()+timedelta(hours=8)
-    n1 = now.strftime('%m%d%H%M')
-    print(n1)
-
-    """
     r = TimeCheck()
     
     if(r!="查無資料"):
@@ -26,5 +20,5 @@ def time_job():
             line_bot_api.push_message("U879fdf1cc34bb4c11099be8ffb9b6bb8",TextSendMessage(text=readresult))
     else:
         pass
-    """
+    Timedelete()
 sched.start()

@@ -4,7 +4,7 @@ from linebot.exceptions import InvalidSignatureError
 from linebot import LineBotApi,WebhookHandler
 from linebot.models import MessageEvent, TextMessage, TextSendMessage
 from linebot.models import TemplateSendMessage,ButtonsTemplate,PostbackAction,PostbackEvent
-from datetime import datetime
+from datetime import datetime,timedelta
 import re
 
 from dbAdd import Delivery_add,User_add,UserInputCheck,UserUpdates,read,readall,deleteOrder
@@ -43,7 +43,10 @@ def handle_message(event):
     
     if content =="功能":
         menu(event)
-        
+    
+    elif content.find("查詢全部")!=-1:
+        searchall(event)
+
     elif content.find("外送者")!=-1:
         delivery_input(event)
 
@@ -68,9 +71,6 @@ def handle_postback(event):
 
     elif event.postback.data == 'search':
         search(event)
-    
-    elif event.postback.data == 'search_all':
-        searchall(event)
 
     elif event.postback.data == 'delete_ex':
         delete_ex(event)
@@ -80,7 +80,6 @@ def menu(event):
         PostbackAction(label='可外送',text=None,data='delivery_ex'),
         PostbackAction(label='幫外送',text=None,data='user_ex'),
         PostbackAction(label='查詢自己的訂單',text=None,data='search'),
-        #PostbackAction(label='查詢目前的訂單',text=None,data='search_all'),
         PostbackAction(label='刪除訂單',text=None,data='delete_ex')
         ])
 
@@ -101,6 +100,7 @@ def delivery_input(event):
     dt = result.find("送達時間:")
     lim = result.find("上限份數:")
     place = result.find("取貨地點:")
+    now = datetime.now()+timedelta(hours = 8)
     if(d !=-1 and a !=-1 and rt!=-1 and dt!=-1 and lim!=-1 and place!=-1):
         result = result.split("\n")
         if(len(result)==6):
@@ -109,8 +109,13 @@ def delivery_input(event):
                 rt = sp(result[2])
                 dt = sp(result[3])
                 lim = sp(result[4])
-                datetime.strptime(rt,"%m%d %H%M")
-                datetime.strptime(dt,"%m%d %H%M")
+                rt = datetime.strptime(rt,"%m%d %H%M")
+                print(rt)
+                dt = datetime.strptime(dt,"%m%d %H%M")
+                print(dt)
+                print(now)
+                if(rt<now or dt< now):
+                    line_bot_api.reply_message(event.reply_token,TextMessage(text="時間輸入錯誤"))
                 int(lim)
                 ID = Delivery_add(sp(result[0]),"",sp(result[1]),rt,dt,lim,sp(result[5]),"0",ID)
                 replytext = "已收到感謝您的使用\n您的訂單編號是:" + ID
@@ -129,6 +134,7 @@ def user_ex(event):
 def user_input(event):
     replytext="已收到感謝您的使用\n您的訂單編號是:"
     result = event.message.text
+    now = datetime.now()+timedelta(hours = 8)
     u = result.find("使用者:")
     a = result.find("外送地區:")
     dt = result.find("送達時間:")
@@ -142,7 +148,9 @@ def user_input(event):
             try:
                 dt = sp(result[2])
                 q = sp(result[5])
-                datetime.strptime(dt,"%m%d %H%M")
+                dt = datetime.strptime(dt,"%m%d %H%M")
+                if(dt<now):
+                    line_bot_api.reply_message(event.reply_token,TextMessage(text="時間輸入錯誤"))
                 int(q)
                 ID = UserInputCheck(sp(result[0]),sp(result[1]),sp(result[2]),sp(result[3]),sp(result[4]),sp(result[5]),UserID)
                 if(ID!="目前沒有可以媒合的對象"):
@@ -150,16 +158,13 @@ def user_input(event):
                 else:
                     replytext = ID
                 line_bot_api.reply_message(event.reply_token,TextMessage(text=replytext))
-            except Exception as e:
-                line_bot_api.reply_message(event.reply_token,TextMessage(text="輸入錯誤"))
-                print("1")
-                print(e)
+            except:
+                line_bot_api.reply_message(event.reply_token,TextMessage(text="輸入錯誤"))  
         else:
-            line_bot_api.reply_message(event.reply_token,TextMessage(text="輸入錯誤"))
-            print("2")
+            line_bot_api.reply_message(event.reply_token,TextMessage(text="輸入錯誤"))  
     else:
         line_bot_api.reply_message(event.reply_token,TextMessage(text="輸入錯誤"))
-        print("3")
+        
 def searchall(event):
     r = readall()
     if (r ==[]):

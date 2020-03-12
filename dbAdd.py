@@ -43,7 +43,7 @@ def UserInputCheck(name,area,d_time,store,product,quantity,u_id):
     check = db_session.query(Order).filter(Order.Area==area).order_by(Order.OrderID)
     now = datetime.now()+timedelta(hours=8)
     n1 = now.strftime('%m%d %H%M')
-    print(n1)
+    
     #檢查是否超過結單時間與送達時間
     for row in check:
         d_time1 = datetime.strptime(d_time,'%m%d %H%M')+timedelta(minutes=30)
@@ -178,7 +178,7 @@ def deleteOrder(ID,U_ID):
         print(u_name)
 
         UserUpdates(u_name,ID)
-        db_session.query(OrderDetail).filter(OrderDetail.OrderID==ID).delete()
+        db_session.query(OrderDetail).filter(OrderDetail.OrderID==ID and OrderDetail.UserID==U_ID).delete()
         db_session.commit()
         db_session.close()
         print("delete done")
@@ -221,4 +221,20 @@ def TimeCheck():
         return result
     else:
         return "查無資料"
+
+def Timedelete():
+    now = datetime.now()+timedelta(hours = 8)
+    result = db_session.query(Order).filter((Order.User_name=="") | (Order.User_name ==",")).filter(Order.Check=="0")
+    i = iter(result)
+    while True:
+        try:
+            gr = next(i)
+            rt = datetime.strptime(gr.Receipt_time,"%m%d %H%M")
+            if(rt<now):
+                db_session.query(Order).filter(Order.OrderID==gr.OrderID).delete()
+                db_session.commit()
+        except:
+            db_session.close()
+            break
+    
 
