@@ -189,7 +189,7 @@ def searchall(event):
             line_bot_api.push_message(ID,TextMessage(text = "查詢結果\n"+readresult))
 
 def search(event):
-    
+
     try:
         G_ID = event.source.group_id
         ID = event.source.user_id
@@ -208,9 +208,8 @@ def search(event):
         else:
             for x in range(0,len(r),10):
                 readresult = "OrderID:"+r[x]+"\n地區:"+r[x+1]+"\n外送者:"+r[x+2]+"\n使用者:"+r[x+3]+"\n收單時間:"+r[x+4]+"\n送達時間:"+r[x+5]+"\n上限份數:"+r[x+6]+"\n訂單明細:"+r[x+7]+"\n目前總份數:"+r[x+8]+"\n取貨地點:"+r[x+9]
-                line_bot_api.push_message(G_ID,TextMessage(text = "查詢結果\n"+readresult))
+                line_bot_api.push_message(ID,TextMessage(text = "查詢\n"+readresult))
     
-
 def delete_ex(event):
     try:
         ID = event.source.group_id
