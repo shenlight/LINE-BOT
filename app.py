@@ -170,13 +170,14 @@ def user_input(event):
         line_bot_api.reply_message(event.reply_token,TextMessage(text="輸入錯誤"))
         
 def searchall(event):
+    U_ID = event.source.user_id
     r = readall()
     if (r ==[]):
         line_bot_api.reply_message(event.reply_token,TextMessage(text = "目前查無訂單"))
     else:
         for x in range(0,len(r),10):
             readresult = "OrderID:"+r[x]+"\n地區:"+r[x+1]+"\n外送者:"+r[x+2]+"\n使用者:"+r[x+3]+"\n收單時間:"+r[x+4]+"\n送達時間:"+r[x+5]+"\n上限份數:"+r[x+6]+"\n訂單明細:"+r[x+7]+"\n目前總份數:"+r[x+8]+"\n取貨地點:"+r[x+9]
-            line_bot_api.reply_message(event.reply_token,TextMessage(text = "查詢結果\n"+readresult))
+            line_bot_api.push_message(U_ID,TextMessage(text = "查詢結果\n"+readresult))
 
 def search(event):
     U_ID = event.source.user_id
@@ -186,7 +187,7 @@ def search(event):
     else:
         for x in range(0,len(r),10):
             readresult = "OrderID:"+r[x]+"\n地區:"+r[x+1]+"\n外送者:"+r[x+2]+"\n使用者:"+r[x+3]+"\n收單時間:"+r[x+4]+"\n送達時間:"+r[x+5]+"\n上限份數:"+r[x+6]+"\n訂單明細:"+r[x+7]+"\n目前總份數:"+r[x+8]+"\n取貨地點:"+r[x+9]
-            line_bot_api.reply_message(event.reply_token,TextMessage(text = "查詢結果\n"+readresult))
+            line_bot_api.push_message(U_ID,TextMessage(text = "查詢結果\n"+readresult))
 
 def delete_ex(event):
     ID = event.source.user_id
@@ -194,12 +195,11 @@ def delete_ex(event):
     line_bot_api.push_message(ID,TextMessage(text = "刪除訂單編號:0"))
 
 def delete(event):
-    d_ID = event.source.user_id
     result = event.message.text
     ID = sp(result)
     U_ID = event.source.user_id
     d_result = deleteOrder(ID,U_ID)
-    line_bot_api.push_message(d_ID,TextMessage(text=d_result))
+    line_bot_api.reply_message(event.reply_token,TextMessage(text=d_result))
 
 
 def sp(data):

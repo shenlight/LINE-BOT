@@ -10,7 +10,7 @@ handler = WebhookHandler('38d5c2f5185a44fa17ffe21e3788ccc2')
 
 #TODO read 方法要修改 此為用ID查詢訂單方法
 sched = BlockingScheduler()
-@sched.scheduled_job('interval',minutes=1)
+@sched.scheduled_job('interval',minutes=15)
 def time_job():
     r = TimeCheck()
     
