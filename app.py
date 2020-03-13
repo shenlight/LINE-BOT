@@ -88,7 +88,10 @@ def menu(event):
 
 
 def delivery_ex(event):
-    ID = event.source.group_id
+    try:
+        ID = event.source.group_id
+    except:
+        ID = event.source.user_id
     line_bot_api.push_message(ID,TextMessage(text="請輸入資料 以下是範例"))
     line_bot_api.reply_message(event.reply_token,TextMessage(text="外送者:沈育全\n外送地區:大社\n收單時間:0301 1700\n送達時間:0301 1900\n上限份數:10\n取貨地點:燕窩136"))
 
@@ -129,8 +132,11 @@ def delivery_input(event):
     else:
         line_bot_api.reply_message(event.reply_token,TextMessage(text="輸入錯誤"))
 def user_ex(event):
-    #ID = event.source.user_id
-    line_bot_api.push_message("Cd495babd31cff04b3743958031d8dd71",TextMessage(text="請輸入資料 以下是範例"))
+    try:
+        ID = event.source.group_id
+    except:
+        ID = event.source.user_id
+    line_bot_api.push_message(ID,TextMessage(text="請輸入資料 以下是範例"))
     line_bot_api.reply_message(event.reply_token,TextMessage(text="使用者:ZOZEJ\n外送地區:大社\n送達時間:0301 1900\n店家:碳烤土司\n點餐內容:二號餐*1 3號餐*1\n總份數:2"))
 
 def user_input(event):
@@ -170,35 +176,44 @@ def user_input(event):
         line_bot_api.reply_message(event.reply_token,TextMessage(text="輸入錯誤"))
         
 def searchall(event):
-    U_ID = event.source.user_id
+    try:
+        ID = event.source.group_id
+    except:
+        ID = event.source.user_id
     r = readall()
     if (r ==[]):
         line_bot_api.reply_message(event.reply_token,TextMessage(text = "目前查無訂單"))
     else:
         for x in range(0,len(r),10):
             readresult = "OrderID:"+r[x]+"\n地區:"+r[x+1]+"\n外送者:"+r[x+2]+"\n使用者:"+r[x+3]+"\n收單時間:"+r[x+4]+"\n送達時間:"+r[x+5]+"\n上限份數:"+r[x+6]+"\n訂單明細:"+r[x+7]+"\n目前總份數:"+r[x+8]+"\n取貨地點:"+r[x+9]
-            line_bot_api.push_message(U_ID,TextMessage(text = "查詢結果\n"+readresult))
+            line_bot_api.push_message(ID,TextMessage(text = "查詢結果\n"+readresult))
 
 def search(event):
-    U_ID = event.source.user_id
-    r = read(U_ID)
+    try:
+        ID = event.source.group_id
+    except:
+        ID = event.source.user_id
+    r = read(ID)
     if (r == "查無與您相關資料"):
         line_bot_api.reply_message(event.reply_token,TextMessage(text = "查無與您相關資料"))
     else:
         for x in range(0,len(r),10):
             readresult = "OrderID:"+r[x]+"\n地區:"+r[x+1]+"\n外送者:"+r[x+2]+"\n使用者:"+r[x+3]+"\n收單時間:"+r[x+4]+"\n送達時間:"+r[x+5]+"\n上限份數:"+r[x+6]+"\n訂單明細:"+r[x+7]+"\n目前總份數:"+r[x+8]+"\n取貨地點:"+r[x+9]
-            line_bot_api.push_message("Cd495babd31cff04b3743958031d8dd71",TextMessage(text = "查詢結果\n"+readresult))
+            line_bot_api.push_message(ID,TextMessage(text = "查詢結果\n"+readresult))
 
 def delete_ex(event):
-    #ID = event.source.user_id
+    try:
+        ID = event.source.group_id
+    except:
+        ID = event.source.user_id
     line_bot_api.push_message("Cd495babd31cff04b3743958031d8dd71",TextMessage(text= "請輸入要刪除的訂單編號，僅有使用者可以刪除與自已相關的訂單，以下是範例"))
     line_bot_api.reply_message(event.reply_token,TextMessage(text = "刪除訂單編號:0"))
 
 def delete(event):
+    ID = event.source.user_id
     result = event.message.text
-    ID = sp(result)
-    U_ID = event.source.user_id
-    d_result = deleteOrder(ID,U_ID)
+    O_ID = sp(result)
+    d_result = deleteOrder(O_ID,ID)
     line_bot_api.reply_message(event.reply_token,TextMessage(text=d_result))
 
 
