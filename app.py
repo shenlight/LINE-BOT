@@ -76,9 +76,9 @@ def handle_postback(event):
         delete_ex(event)
     
 def menu(event):
-    buttons_template = ButtonsTemplate(title='全全外送很高興為您服務',text='請點選要使用的功能並依照指示操作，目前僅開放司機發起訂單，使用者跟隨',actions=[
-        PostbackAction(label='可外送(司機)',text=None,data='delivery_ex'),
-        PostbackAction(label='幫外送(使用者)',text=None,data='user_ex'),
+    buttons_template = ButtonsTemplate(title='全全外送很高興為您服務',text='請點選要使用的功能並依照指示操作\n目前僅開放司機發起訂單，使用者跟隨的服務模式',actions=[
+        PostbackAction(label='可順路幫外送(司機)',text=None,data='delivery_ex'),
+        PostbackAction(label='需要幫外送(使用者)',text=None,data='user_ex'),
         PostbackAction(label='查詢自己的訂單',text=None,data='search'),
         PostbackAction(label='刪除訂單',text=None,data='delete_ex')
         ])
@@ -189,18 +189,28 @@ def searchall(event):
             line_bot_api.push_message(ID,TextMessage(text = "查詢結果\n"+readresult))
 
 def search(event):
+    
     try:
         G_ID = event.source.group_id
         ID = event.source.user_id
+        r = read(ID)
+        if (r == "查無與您相關資料"):
+            line_bot_api.reply_message(event.reply_token,TextMessage(text = "查無與您相關資料"))
+        else:
+            for x in range(0,len(r),10):
+                readresult = "OrderID:"+r[x]+"\n地區:"+r[x+1]+"\n外送者:"+r[x+2]+"\n使用者:"+r[x+3]+"\n收單時間:"+r[x+4]+"\n送達時間:"+r[x+5]+"\n上限份數:"+r[x+6]+"\n訂單明細:"+r[x+7]+"\n目前總份數:"+r[x+8]+"\n取貨地點:"+r[x+9]
+                line_bot_api.push_message(G_ID,TextMessage(text = "查詢結果\n"+readresult))
     except:
         ID = event.source.user_id
-    r = read(ID)
-    if (r == "查無與您相關資料"):
-        line_bot_api.reply_message(event.reply_token,TextMessage(text = "查無與您相關資料"))
-    else:
-        for x in range(0,len(r),10):
-            readresult = "OrderID:"+r[x]+"\n地區:"+r[x+1]+"\n外送者:"+r[x+2]+"\n使用者:"+r[x+3]+"\n收單時間:"+r[x+4]+"\n送達時間:"+r[x+5]+"\n上限份數:"+r[x+6]+"\n訂單明細:"+r[x+7]+"\n目前總份數:"+r[x+8]+"\n取貨地點:"+r[x+9]
-            line_bot_api.push_message(G_ID,TextMessage(text = "查詢結果\n"+readresult))
+        r = read(ID)
+        if (r == "查無與您相關資料"):
+            line_bot_api.reply_message(event.reply_token,TextMessage(text = "查無與您相關資料"))
+        else:
+            for x in range(0,len(r),10):
+                readresult = "OrderID:"+r[x]+"\n地區:"+r[x+1]+"\n外送者:"+r[x+2]+"\n使用者:"+r[x+3]+"\n收單時間:"+r[x+4]+"\n送達時間:"+r[x+5]+"\n上限份數:"+r[x+6]+"\n訂單明細:"+r[x+7]+"\n目前總份數:"+r[x+8]+"\n取貨地點:"+r[x+9]
+                line_bot_api.push_message(ID,TextMessage(text = "查詢結果\n"+readresult))
+    
+    """
 
 def delete_ex(event):
     try:
