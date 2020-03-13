@@ -14,7 +14,7 @@ handler = WebhookHandler('38d5c2f5185a44fa17ffe21e3788ccc2')
 
 
 app = Flask(__name__)
-
+#Cd495babd31cff04b3743958031d8dd71
 # 設定你接收訊息的網址，如 https://YOURAPP.herokuapp.com/callback
 @app.route("/callback", methods=['POST'])
 def callback():
@@ -172,32 +172,34 @@ def user_input(event):
 def searchall(event):
     r = readall()
     if (r ==[]):
-        line_bot_api.push_message("U879fdf1cc34bb4c11099be8ffb9b6bb8",TextMessage(text = "目前查無訂單"))
+        line_bot_api.reply_message(event.reply_token,TextMessage(text = "目前查無訂單"))
     else:
         for x in range(0,len(r),10):
             readresult = "OrderID:"+r[x]+"\n地區:"+r[x+1]+"\n外送者:"+r[x+2]+"\n使用者:"+r[x+3]+"\n收單時間:"+r[x+4]+"\n送達時間:"+r[x+5]+"\n上限份數:"+r[x+6]+"\n訂單明細:"+r[x+7]+"\n目前總份數:"+r[x+8]+"\n取貨地點:"+r[x+9]
-            line_bot_api.push_message("U879fdf1cc34bb4c11099be8ffb9b6bb8",TextMessage(text = "查詢結果\n"+readresult))
+            line_bot_api.reply_message(event.reply_token,TextMessage(text = "查詢結果\n"+readresult))
 
 def search(event):
     U_ID = event.source.user_id
     r = read(U_ID)
     if (r == "查無與您相關資料"):
-        line_bot_api.push_message("U879fdf1cc34bb4c11099be8ffb9b6bb8",TextMessage(text = "查無與您相關資料"))
+        line_bot_api.reply_message(event.reply_token,TextMessage(text = "查無與您相關資料"))
     else:
         for x in range(0,len(r),10):
             readresult = "OrderID:"+r[x]+"\n地區:"+r[x+1]+"\n外送者:"+r[x+2]+"\n使用者:"+r[x+3]+"\n收單時間:"+r[x+4]+"\n送達時間:"+r[x+5]+"\n上限份數:"+r[x+6]+"\n訂單明細:"+r[x+7]+"\n目前總份數:"+r[x+8]+"\n取貨地點:"+r[x+9]
-            line_bot_api.push_message("U879fdf1cc34bb4c11099be8ffb9b6bb8",TextMessage(text = "查詢結果\n"+readresult))
+            line_bot_api.reply_message(event.reply_token,TextMessage(text = "查詢結果\n"+readresult))
 
 def delete_ex(event):
+    ID = event.source.user_id
     line_bot_api.reply_message(event.reply_token,TextMessage(text= "請輸入要刪除的訂單編號，僅有使用者可以刪除與自已相關的訂單，以下是範例"))
-    line_bot_api.push_message("U879fdf1cc34bb4c11099be8ffb9b6bb8",TextMessage(text = "刪除訂單編號:0"))
+    line_bot_api.push_message(ID,TextMessage(text = "刪除訂單編號:0"))
 
 def delete(event):
+    d_ID = event.source.user_id
     result = event.message.text
     ID = sp(result)
     U_ID = event.source.user_id
     d_result = deleteOrder(ID,U_ID)
-    line_bot_api.push_message("U879fdf1cc34bb4c11099be8ffb9b6bb8",TextMessage(text=d_result))
+    line_bot_api.push_message(d_ID,TextMessage(text=d_result))
 
 
 def sp(data):

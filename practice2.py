@@ -22,11 +22,9 @@ db_session = DB_session()
 line_bot_api = LineBotApi('N97P2OvLyWzhxJHNQgLpCUymUSkNMdiSQBqKgaOXBU5AAVOMuTNbA1whs1Ocy4Ozk2hsFoUbvn+KicYgFT24DKdArnej2tne/q31PvbeahGjKcnIMuBkOECg2Df6TXMbBvupbgxTnAXqDcpyKgylSgdB04t89/1O/w1cDnyilFU=')
 handler = WebhookHandler('38d5c2f5185a44fa17ffe21e3788ccc2')
 
-d_time = "0310 0021"
-now = datetime.strftime(datetime.now(),"%m%d %H%M")
-print(now)
-datetime.strptime(d_time,"%m%d %H%M")
-print(d_time)
+db_session.query(Order).filter(Order.OrderID==96).delete()
+db_session.commit()
+db_session.close()
 
 
 def timedelete():

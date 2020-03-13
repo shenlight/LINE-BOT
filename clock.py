@@ -16,8 +16,8 @@ def time_job():
     
     if(r!="查無資料"):
         for x in range(0,len(r),10):
-            readresult = "OrderID:"+r[x]+"\n地區:"+r[x+1]+"\n外送者:"+r[x+2]+"\n使用者:"+r[x+3]+"\n收單時間:"+r[x+4]+"\n送達時間:"+r[x+5]+"\n上限份數:"+r[x+6]+"\n訂單明細:"+r[x+7]+"\n目前總份數:"+r[x+8]+"\n取貨地點:"+r[x+9]
-            line_bot_api.push_message("U879fdf1cc34bb4c11099be8ffb9b6bb8",TextSendMessage(text=readresult))
+            readresult = "訂單成立\nOrderID:"+r[x]+"\n地區:"+r[x+1]+"\n外送者:"+r[x+2]+"\n使用者:"+r[x+3]+"\n收單時間:"+r[x+4]+"\n送達時間:"+r[x+5]+"\n上限份數:"+r[x+6]+"\n訂單明細:"+r[x+7]+"\n目前總份數:"+r[x+8]+"\n取貨地點:"+r[x+9]
+            line_bot_api.push_message("Cd495babd31cff04b3743958031d8dd71",TextSendMessage(text=readresult))
     else:
         pass
     Timedelete()
