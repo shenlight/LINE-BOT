@@ -88,8 +88,8 @@ def menu(event):
 
 
 def delivery_ex(event):
-    #ID = event.source
-    line_bot_api.push_message("Cd495babd31cff04b3743958031d8dd71",TextMessage(text="請輸入資料 以下是範例"))
+    ID = event.source.group_id
+    line_bot_api.push_message(ID,TextMessage(text="請輸入資料 以下是範例"))
     line_bot_api.reply_message(event.reply_token,TextMessage(text="外送者:沈育全\n外送地區:大社\n收單時間:0301 1700\n送達時間:0301 1900\n上限份數:10\n取貨地點:燕窩136"))
 
 def delivery_input(event):
