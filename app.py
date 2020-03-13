@@ -206,7 +206,7 @@ def delete_ex(event):
         ID = event.source.group_id
     except:
         ID = event.source.user_id
-    line_bot_api.push_message("Cd495babd31cff04b3743958031d8dd71",TextMessage(text= "請輸入要刪除的訂單編號，僅有使用者可以刪除與自已相關的訂單，以下是範例"))
+    line_bot_api.push_message(ID,TextMessage(text= "請輸入要刪除的訂單編號，僅有使用者可以刪除與自已相關的訂單，以下是範例"))
     line_bot_api.reply_message(event.reply_token,TextMessage(text = "刪除訂單編號:0"))
 
 def delete(event):
