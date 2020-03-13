@@ -76,9 +76,9 @@ def handle_postback(event):
         delete_ex(event)
     
 def menu(event):
-    buttons_template = ButtonsTemplate(title='全全外送很高興為您服務',text='請點選要使用的功能並依照指示操作',actions=[
-        PostbackAction(label='可外送',text=None,data='delivery_ex'),
-        PostbackAction(label='幫外送',text=None,data='user_ex'),
+    buttons_template = ButtonsTemplate(title='全全外送很高興為您服務',text='請點選要使用的功能並依照指示操作，目前僅開放司機發起訂單，使用者跟隨',actions=[
+        PostbackAction(label='可外送(司機)',text=None,data='delivery_ex'),
+        PostbackAction(label='幫外送(使用者)',text=None,data='user_ex'),
         PostbackAction(label='查詢自己的訂單',text=None,data='search'),
         PostbackAction(label='刪除訂單',text=None,data='delete_ex')
         ])
