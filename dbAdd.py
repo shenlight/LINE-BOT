@@ -89,8 +89,9 @@ def read(U_ID):
         try:
             if(count ==0):
                 gr = next(i)
-                gr1 = next(i)
                 count += 1
+                gr1 = next(i)
+                
             else:
                 gr = gr1
                 gr1 = next(i)
