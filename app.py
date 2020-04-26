@@ -90,12 +90,13 @@ def menu(event):
     line_bot_api.reply_message(event.reply_token,template_message)
 
 def delivery_menu(event):
-    message = TemplateSendMessage(alt_text="delivery_menu",TemplateSendMessage = ConfirmTemplate(title = "外送",text="需要幫外帶請選'幫外帶',可以順路幫外帶請選'可外帶'",actions=[
+    confirm_template = ConfirmTemplate(text="需要幫外帶請選幫外帶,可以順路幫外帶請選可外帶",actions=[
         PostbackAction(label="可外帶",text=None,data='delivery_ex'),
         PostbackAction(label="幫外帶",text=None,data='user_ex')
-        ]))
+        ])
 
-    line_bot_api.reply_message(event.reply_token,message)
+    template_message = TemplateSendMessage(alt_text='外送',template=confirm_template)
+    line_bot_api.reply_message(event.reply_token,template_message)
 
 def delivery_ex(event):
     try:
