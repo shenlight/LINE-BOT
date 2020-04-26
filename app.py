@@ -3,7 +3,7 @@ from flask import Flask, request, abort
 from linebot.exceptions import InvalidSignatureError
 from linebot import LineBotApi,WebhookHandler
 from linebot.models import MessageEvent, TextMessage, TextSendMessage
-from linebot.models import TemplateSendMessage,ButtonsTemplate,PostbackAction,PostbackEvent
+from linebot.models import TemplateSendMessage,ButtonsTemplate,ConfirmTemplate,CarouselTemplate,CarouselColumn,PostbackAction,PostbackEvent
 from datetime import datetime,timedelta
 import re
 
@@ -69,6 +69,9 @@ def handle_postback(event):
     elif event.postback.data == 'user_ex':
         user_ex(event)
 
+    elif event.postback.data == 'delivery_menu':
+        delivery_menu(event)
+
     elif event.postback.data == 'search':
         search(event)
 
@@ -77,8 +80,8 @@ def handle_postback(event):
     
 def menu(event):
     buttons_template = ButtonsTemplate(title='全全外送很高興為您服務',text='請點選要使用的功能並依照指示操作\n目前僅開放司機發起訂單，使用者跟隨的服務模式',actions=[
-        PostbackAction(label='可順路幫外送(司機)',text=None,data='delivery_ex'),
-        PostbackAction(label='需要幫外送(使用者)',text=None,data='user_ex'),
+        PostbackAction(label='外帶',text=None,data='delivery_menu'),
+        #PostbackAction(label='需要幫外帶(使用者)',text=None,data='user_ex'),
         PostbackAction(label='查詢自己的訂單',text=None,data='search'),
         PostbackAction(label='刪除訂單',text=None,data='delete_ex')
         ])
@@ -86,7 +89,14 @@ def menu(event):
     template_message = TemplateSendMessage(alt_text='功能',template=buttons_template)
     line_bot_api.reply_message(event.reply_token,template_message)
 
+def delivery_menu(event):
+    message = TemplateSendMessage(alt_text="delivery_menu",TemplateSendMessage = ConfirmTemplate(text="需要幫外帶請選'幫外帶',可以順路幫外帶請選'可外帶'",actions=[
+        PostbackAction(label="可外帶",text=None,data='delivery_ex'),
+        PostbackAction(label="幫外帶",text=None,data='user_ex')
+        ]))
 
+    line_bot_api.reply_message(event.reply_token,message)
+    
 def delivery_ex(event):
     try:
         ID = event.source.group_id
