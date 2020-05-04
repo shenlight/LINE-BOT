@@ -43,9 +43,6 @@ def handle_message(event):
     
     if content =="功能":
         menu(event)
-    
-    elif content.find("查詢全部")!=-1:
-        searchall(event)
 
     elif content.find("外送者")!=-1:
         delivery_input(event)
@@ -75,13 +72,16 @@ def handle_postback(event):
     elif event.postback.data == 'search':
         search(event)
 
+    elif event.postback.data == 'search_all':
+        searchall(event)
+
     elif event.postback.data == 'delete_ex':
         delete_ex(event)
     
 def menu(event):
-    buttons_template = ButtonsTemplate(title='全全外送很高興為您服務',text='請點選要使用的功能並依照指示操作\n目前僅開放司機發起訂單，使用者跟隨的服務模式',actions=[
+    buttons_template = ButtonsTemplate(title='全全外送很高興為您服務',text='請點選要使用的功能並依照指示操作，目前僅開放司機發起訂單，使用者跟隨的服務模式',actions=[
         PostbackAction(label='外帶',text=None,data='delivery_menu'),
-        #PostbackAction(label='需要幫外帶(使用者)',text=None,data='user_ex'),
+        PostbackAction(label='查詢現有訂單',text=None,data='search_all'),
         PostbackAction(label='查詢自己的訂單',text=None,data='search'),
         PostbackAction(label='刪除訂單',text=None,data='delete_ex')
         ])
@@ -90,7 +90,7 @@ def menu(event):
     line_bot_api.reply_message(event.reply_token,template_message)
 
 def delivery_menu(event):
-    confirm_template = ConfirmTemplate(text="需要幫外帶請選幫外帶,可以順路幫外帶請選可外帶",actions=[
+    confirm_template = ConfirmTemplate(text="需要幫外帶請選'幫外帶',可以順路幫外帶請選'可外帶'",actions=[
         PostbackAction(label="可外帶",text=None,data='delivery_ex'),
         PostbackAction(label="幫外帶",text=None,data='user_ex')
         ])
