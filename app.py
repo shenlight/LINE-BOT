@@ -80,9 +80,13 @@ def handle_postback(event):
         delete_ex(event)
 
 def test(event):
-    c = CarouselColumn(title='test1',text='tt1')
-    c1 = CarouselColumn(title='test2',text='tt2')
-    buttons = CarouselTemplate(columns=c)
+    #c = CarouselColumn(title='test1',text='tt1')
+    #c1 = CarouselColumn(title='test2',text='tt2')
+    buttons = CarouselTemplate(columns=[
+        CarouselColumn(
+            title='test1',text='tt1'
+        )
+    ])
     ct = TemplateSendMessage(alt_text = 'testtest',template=buttons)
     line_bot_api.reply_message(event.reply_token,ct)
 
