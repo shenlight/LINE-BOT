@@ -3,7 +3,7 @@ from flask import Flask, request, abort
 from linebot.exceptions import InvalidSignatureError
 from linebot import LineBotApi,WebhookHandler
 from linebot.models import MessageEvent, TextMessage, TextSendMessage
-from linebot.models import TemplateSendMessage,ButtonsTemplate,CarouselTemplate,CarouselColumn,PostbackAction,PostbackEvent
+from linebot.models import TemplateSendMessage,ButtonsTemplate,CarouselTemplate,CarouselColumn,PostbackAction,PostbackEvent,MessageAction
 from datetime import datetime,timedelta
 import re
 
@@ -84,7 +84,12 @@ def test(event):
     #c1 = CarouselColumn(title='test2',text='tt2')
     buttons = CarouselTemplate(columns=[
         CarouselColumn(
-            title='test1',text='tt1'
+            title='test1',text='tt1',actions=[
+                MessageAction(
+                    label='123'
+                    text = '1234'
+                )
+            ]
         )
     ])
     ct = TemplateSendMessage(alt_text = 'testtest',template=buttons)
