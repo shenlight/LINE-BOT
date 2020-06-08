@@ -8,6 +8,8 @@ DB_session = sessionmaker(database)
 db_session = DB_session()
 
 #司機新增
+
+
 def Delivery_add(d_name,u_name,area,r_time,d_time,limit,place,check,u_id):
     data = Order(Delivery_name = d_name, User_name= u_name, Area = area, Receipt_time = r_time, Delivery_time = d_time
                 , Limit = limit, Place = place, Check = check,User_ID = u_id)
@@ -17,7 +19,7 @@ def Delivery_add(d_name,u_name,area,r_time,d_time,limit,place,check,u_id):
     db_session.close()
     print("Delivery Add DONE")
     return ID
-#delivery_add("西班牙","","高雄","1700","1930","5","133")
+#Delivery_add("西班牙","","高雄","1700","1930","5","133","0","123456")
 
 #使用者新增
 def User_add(orderid,u_name,store,prduct,quantity,u_id):

@@ -3,7 +3,7 @@ from flask import Flask, request, abort
 from linebot.exceptions import InvalidSignatureError
 from linebot import LineBotApi,WebhookHandler
 from linebot.models import MessageEvent, TextMessage, TextSendMessage
-from linebot.models import TemplateSendMessage,ButtonsTemplate,ConfirmTemplate,CarouselTemplate,CarouselColumn,PostbackAction,PostbackEvent
+from linebot.models import TemplateSendMessage,ButtonsTemplate,CarouselTemplate,CarouselColumn,PostbackAction,PostbackEvent
 from datetime import datetime,timedelta
 import re
 
@@ -52,7 +52,8 @@ def handle_message(event):
 
     elif content.find("刪除訂單編號")!=-1:
         delete(event)
-    
+    elif content.find("test") !=-1:
+        test(event) 
     else:
         pass
 
@@ -77,7 +78,15 @@ def handle_postback(event):
 
     elif event.postback.data == 'delete_ex':
         delete_ex(event)
-    
+
+def test(event):
+    c = CarouselColumn(title='test1',text='tt1')
+    c1 = CarouselColumn(title='test2',text='tt2')
+    buttons = CarouselTemplate(columns=c)
+    ct = TemplateSendMessage(alt_text = 'testtest',template=buttons)
+    line_bot_api.reply_message(event.reply_token,ct)
+
+
 def menu(event):
     buttons_template = ButtonsTemplate(title='全全外送很高興為您服務',text='請點選要使用的功能並依照指示操作，目前僅開放司機發起訂單，使用者跟隨的服務模式',actions=[
         PostbackAction(label='外帶',text=None,data='delivery_menu'),
