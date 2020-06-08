@@ -86,8 +86,8 @@ def test(event):
         CarouselColumn(
             title='test1',text='tt1',actions=[
                 MessageAction(
-                    label='123'
-                    text = '1234'
+                    label='123',
+                    text = '12345'
                 )
             ]
         )
