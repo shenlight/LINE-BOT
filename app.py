@@ -3,7 +3,7 @@ from flask import Flask, request, abort
 from linebot.exceptions import InvalidSignatureError
 from linebot import LineBotApi,WebhookHandler
 from linebot.models import MessageEvent, TextMessage, TextSendMessage
-from linebot.models import TemplateSendMessage,ButtonsTemplate,CarouselTemplate,CarouselColumn,PostbackAction,PostbackEvent,MessageAction
+from linebot.models import TemplateSendMessage,ButtonsTemplate,CarouselTemplate,ConfirmTemplate,CarouselColumn,PostbackAction,PostbackEvent,MessageAction
 from datetime import datetime,timedelta
 import re
 
