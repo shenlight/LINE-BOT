@@ -153,10 +153,13 @@ def readall():
             product = product + d.Store_name + "," + d.Product + " "
             quantity = quantity + int(d.Quantity)
             d_ID = d.OrderID
+            
         if(o.OrderID ==d_ID):
             result.append(product)
             result.append(str(quantity))
             result.append(o.Place)
+            product = ""
+            quantity = ""
         else:
             result.append(" ")
             result.append(" ")
