@@ -7,9 +7,12 @@ database = create_engine("postgres://idojhmutgwujgs:86290065805ef7e22a3329f7d8e1
 DB_session = sessionmaker(database)
 db_session = DB_session()
 
+for i in range(98,119):
+    db_session.query(Order).filter(Order.OrderID==i).delete()
+    db_session.commit()
+db_session.close()
+
 #司機新增
-
-
 def Delivery_add(d_name,u_name,area,r_time,d_time,limit,place,check,u_id):
     data = Order(Delivery_name = d_name, User_name= u_name, Area = area, Receipt_time = r_time, Delivery_time = d_time
                 , Limit = limit, Place = place, Check = check,User_ID = u_id)
@@ -159,7 +162,7 @@ def readall():
             result.append(str(quantity))
             result.append(o.Place)
             product = ""
-            quantity = ""
+            quantity = 0
         else:
             result.append(" ")
             result.append(" ")
