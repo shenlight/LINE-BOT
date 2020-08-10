@@ -8,7 +8,6 @@ from funtion import TimeCheck,Timedelete
 line_bot_api = LineBotApi('')
 handler = WebhookHandler('')
 
-#TODO read 方法要修改 此為用ID查詢訂單方法
 sched = BlockingScheduler()
 @sched.scheduled_job('interval',minutes=1)
 def time_job():
