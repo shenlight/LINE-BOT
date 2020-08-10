@@ -11,7 +11,6 @@ from funtion import Delivery_add,User_add,UserInputCheck,UserUpdates,read,readal
 line_bot_api = LineBotApi('')
 handler = WebhookHandler('')
 
-
 app = Flask(__name__)
 @app.route("/callback", methods=['POST'])
 def callback():
