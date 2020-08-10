@@ -8,8 +8,8 @@ import re
 
 from funtion import Delivery_add,User_add,UserInputCheck,UserUpdates,read,readall,deleteOrder
 
-line_bot_api = LineBotApi('N97P2OvLyWzhxJHNQgLpCUymUSkNMdiSQBqKgaOXBU5AAVOMuTNbA1whs1Ocy4Ozk2hsFoUbvn+KicYgFT24DKdArnej2tne/q31PvbeahGjKcnIMuBkOECg2Df6TXMbBvupbgxTnAXqDcpyKgylSgdB04t89/1O/w1cDnyilFU=')
-handler = WebhookHandler('38d5c2f5185a44fa17ffe21e3788ccc2')
+line_bot_api = LineBotApi('')
+handler = WebhookHandler('')
 
 
 app = Flask(__name__)
