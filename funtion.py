@@ -7,11 +7,6 @@ database = create_engine("postgres://idojhmutgwujgs:86290065805ef7e22a3329f7d8e1
 DB_session = sessionmaker(database)
 db_session = DB_session()
 
-for i in range(98,119):
-    db_session.query(Order).filter(Order.OrderID==i).delete()
-    db_session.commit()
-db_session.close()
-
 #司機新增
 def Delivery_add(d_name,u_name,area,r_time,d_time,limit,place,check,u_id):
     data = Order(Delivery_name = d_name, User_name= u_name, Area = area, Receipt_time = r_time, Delivery_time = d_time
@@ -22,7 +17,6 @@ def Delivery_add(d_name,u_name,area,r_time,d_time,limit,place,check,u_id):
     db_session.close()
     print("Delivery Add DONE")
     return ID
-#Delivery_add("西班牙","","高雄","1700","1930","5","133","0","123456")
 
 #使用者新增
 def User_add(orderid,u_name,store,prduct,quantity,u_id):
@@ -33,7 +27,6 @@ def User_add(orderid,u_name,store,prduct,quantity,u_id):
     db_session.close()
     print("User Add DONE")
     return ID
-#User_add("2","呆毛","鮮茶道","文山青無糖微冰","1")
 
 #使用者新增後更新Order使用者欄位
 def UserUpdates(name,id):
@@ -41,7 +34,6 @@ def UserUpdates(name,id):
     print("Updates DONE")
     db_session.commit()
     db_session.close()
-#updates("",6)
 
 #使用者輸入時間檢查有無可以媒合的對象
 def UserInputCheck(name,area,d_time,store,product,quantity,u_id):
@@ -76,7 +68,6 @@ def UserInputCheck(name,area,d_time,store,product,quantity,u_id):
         else:
             print("no data1")
     return "目前沒有可以媒合的對象"
-#UserInputCheck("Yes234","高雄","1800","麻辣燙","米血豆干小雞",1)
 
 #查詢訂單 依訂單編號
 def read(U_ID):
@@ -134,8 +125,7 @@ def read(U_ID):
             result.append(str(quantity))
             result.append(gr.place)
             return result
-#clock用單筆查詢
-
+#查詢現有的訂單
 def readall():
     d_ID = ""
     product =""
@@ -169,6 +159,7 @@ def readall():
             result.append(o.Place)
     return result
 
+#刪除訂單 依訂單編號
 def deleteOrder(ID,U_ID):
     ID = int(ID)
     result = db_session.query(OrderDetail.User_name.label("u_name")).filter(OrderDetail.OrderID==ID and OrderDetail.UserID==U_ID)
@@ -225,6 +216,7 @@ def TimeCheck():
         quantity = 0
         product = ""
     db_session.close()
+
     if(result!=[]):
         return result
     else:
@@ -244,5 +236,3 @@ def Timedelete():
         except:
             db_session.close()
             break
-    
-

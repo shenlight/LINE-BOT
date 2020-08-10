@@ -1,21 +1,18 @@
-# encoding: utf-8
 from flask import Flask, request, abort
 from linebot.exceptions import InvalidSignatureError
 from linebot import LineBotApi,WebhookHandler
 from linebot.models import MessageEvent, TextMessage, TextSendMessage
-from linebot.models import TemplateSendMessage,ButtonsTemplate,CarouselTemplate,ConfirmTemplate,CarouselColumn,PostbackAction,PostbackEvent,MessageAction
+from linebot.models import TemplateSendMessage,ButtonsTemplate,ConfirmTemplate,PostbackAction,PostbackEvent,MessageAction
 from datetime import datetime,timedelta
 import re
 
-from dbAdd import Delivery_add,User_add,UserInputCheck,UserUpdates,read,readall,deleteOrder
+from funtion import Delivery_add,User_add,UserInputCheck,UserUpdates,read,readall,deleteOrder
 
 line_bot_api = LineBotApi('N97P2OvLyWzhxJHNQgLpCUymUSkNMdiSQBqKgaOXBU5AAVOMuTNbA1whs1Ocy4Ozk2hsFoUbvn+KicYgFT24DKdArnej2tne/q31PvbeahGjKcnIMuBkOECg2Df6TXMbBvupbgxTnAXqDcpyKgylSgdB04t89/1O/w1cDnyilFU=')
 handler = WebhookHandler('38d5c2f5185a44fa17ffe21e3788ccc2')
 
 
 app = Flask(__name__)
-#Cd495babd31cff04b3743958031d8dd71
-# 設定你接收訊息的網址，如 https://YOURAPP.herokuapp.com/callback
 @app.route("/callback", methods=['POST'])
 def callback():
     # get X-Line-Signature header value
@@ -30,15 +27,10 @@ def callback():
         handler.handle(body, signature)
     except InvalidSignatureError:
         abort(400)
-
     return 'OK'
-
-
 
 @handler.add(MessageEvent, message=TextMessage)
 def handle_message(event):
-    #print("Handle: reply_token: " + event.reply_token + ", message: " + event.message.text)
-    #uID = event.source.user_id
     content = event.message.text
     
     if content =="功能":
@@ -78,23 +70,6 @@ def handle_postback(event):
 
     elif event.postback.data == 'delete_ex':
         delete_ex(event)
-
-def test(event):
-    #c = CarouselColumn(title='test1',text='tt1')
-    #c1 = CarouselColumn(title='test2',text='tt2')
-    buttons = CarouselTemplate(columns=[
-        CarouselColumn(
-            title='test1',text='tt1',actions=[
-                MessageAction(
-                    label='123',
-                    text = '12345'
-                )
-            ]
-        )
-    ])
-    ct = TemplateSendMessage(alt_text = 'testtest',template=buttons)
-    line_bot_api.reply_message(event.reply_token,ct)
-
 
 def menu(event):
     buttons_template = ButtonsTemplate(title='全全外送很高興為您服務',text='請點選要使用的功能並依照指示操作，目前僅開放司機發起訂單，使用者跟隨的服務模式',actions=[
@@ -143,11 +118,8 @@ def delivery_input(event):
                 dt = sp(result[3])
                 lim = sp(result[4])
                 datetime.strptime(rt,"%m%d %H%M")
-                print(rt)
                 datetime.strptime(dt,"%m%d %H%M")
                 int(lim)
-                print(dt)
-                print(now)
                 if(rt<now or dt< now):
                     line_bot_api.reply_message(event.reply_token,TextMessage(text="時間輸入錯誤"))
                 else:
@@ -264,4 +236,3 @@ import os
 if __name__ == "__main__":
     app.config['SQLALCHEMY_TRACK_MODIFICATION'] = True
     app.run(host='0.0.0.0',port=os.environ['PORT'])
-    
